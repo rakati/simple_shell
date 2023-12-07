@@ -3,7 +3,7 @@
 ssize_t _getline(char **lineptr, size_t *n, int fd)
 {
 	char *new_ptr;
-	size_t count = 0;
+	static size_t count = 0;
 
 	if (lineptr == NULL || n == NULL)
 		return (-1); /* error indicating invalid arguments */

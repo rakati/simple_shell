@@ -10,7 +10,7 @@ int main ()
 	numberOfBytes = _getline(&line, &length, fd);
 
 	if (numberOfBytes != -1)
-		printf(" you typed: %s length is:%lu", line, numberOfBytes);
+		printf("you typed: %s\nlength is:%lu\n", line, numberOfBytes);
 	else
 		printf("Error\n");
 
