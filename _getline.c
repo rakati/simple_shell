@@ -1,12 +1,10 @@
 #include "shell.h"
 
-ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
+ssize_t _getline(char **lineptr, size_t *n, int fd)
 {
-	/*int fd;*/
 	char *new_ptr;
 	size_t count = 0;
 
-	(void)stream;
 	if (lineptr == NULL || n == NULL)
 		return (-1); /* error indicating invalid arguments */
 
@@ -19,11 +17,7 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 			return (-1); /* error indicating the failure of malloc */
 	}
 
-/*	fd = open(stream, O_RDONLY);
-	if (fd == -1)
-		return (-1);*/ /* error indicating that the open syscall has failled */
-
-	while ((count += read(STDIN_FILENO, *lineptr + count, INIT_SIZE)) != 0)
+	while ((count += read(fd, *lineptr + count, INIT_SIZE)) != 0)
 	{
 		if(count >= *n - 1)
 		{
@@ -43,8 +37,6 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 		return (-1); /* file is empty, nothing to read */
 
 	(*lineptr)[count] = '\0';
-/*	if (close(fd) == -1)
-		return (-1); *//* failled to clode the file */
 
 	return (count);
 }
