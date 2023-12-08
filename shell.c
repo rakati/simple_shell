@@ -10,6 +10,15 @@
  */
 int main(int ac, char **av, char **envp)
 {
+	char line;
+	int fd;
+	int r;
 
+	fd = (ac != 1 ? open(av[1], O_RDONLY) : STDIN_FILENO);
+	while (1)
+	{
+		_puts("$ ");
+		r = _getline(&line, fd);
+	}
 	return (0);
 }
