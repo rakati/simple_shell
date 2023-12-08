@@ -1,8 +1,8 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#define SIZE 1 << 10
-#define INIT_SIZE 1 << 7
+#define SIZE (1 << 10)
+#define INIT_SIZE (1 << 7)
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -15,6 +15,8 @@
 char *_memcpy(char *dest, char *src, unsigned int n);
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 ssize_t _getline(char **lineptr, size_t *n, int fd);
+char *_strtok(char *str, const char *delim);
+char *_strpbrk(char *s, const char *accept);
 
 
 #endif
