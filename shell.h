@@ -1,7 +1,7 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#define SIZE (1 << 10)
+#define GIGA (1 << 10)
 #define INIT_SIZE (1 << 7)
 
 #include <stdlib.h>
