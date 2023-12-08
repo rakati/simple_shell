@@ -1,9 +1,19 @@
 #include "shell.h"
 
+/**
+ * _getline - reads an entire line from fd, storing the address of
+ *the buffer containing the text into *lineptr.
+ * @fd: the stream.
+ * @lineptr: the buffer containing the line from fd.
+ * @n: the size of the buffer.
+ *
+ * Return: number of characters read, or -1 on failure.
+ */
+
 ssize_t _getline(char **lineptr, size_t *n, int fd)
 {
 	char *new_ptr;
-	static size_t count = 0;
+	static size_t count;
 
 	if (lineptr == NULL || n == NULL)
 		return (-1); /* error indicating invalid arguments */
@@ -19,7 +29,7 @@ ssize_t _getline(char **lineptr, size_t *n, int fd)
 
 	while ((count += read(fd, *lineptr + count, INIT_SIZE)) != 0)
 	{
-		if(count >= *n - 1)
+		if (count >= *n - 1)
 		{
 			new_ptr = _realloc(*lineptr, *n, *n * 2);
 			if (new_ptr == NULL)
