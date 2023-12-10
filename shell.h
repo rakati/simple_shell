@@ -1,8 +1,7 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#define GIGA (1 << 10)
-#define INIT_SIZE (1 << 7)
+#define SIZE (1 << 10)
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -12,9 +11,13 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-char *_memcpy(char *dest, char *src, unsigned int n);
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
-ssize_t _getline(char **lineptr, size_t *n, int fd);
+int _getline(char **line, int fd);
+int _read(int fd, char *rd, char *buff);
+char *_strchr(char *s, char c);
+char *_strncpy(char *dest, char *src, int n);
+char *_strdup(char *str);
+char *_strcat(char *dest, char *src);
+int _strlen(char *s);
 char *_strtok(char *str, const char *delim);
 char *_strpbrk(char *s, const char *accept);
 
