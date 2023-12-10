@@ -1,52 +1,89 @@
 #include "shell.h"
 
 /**
- * _getline - reads an entire line from fd, storing the address of
- *the buffer containing the text into *lineptr.
- * @fd: the stream.
- * @lineptr: the buffer containing the line from fd.
- * @n: the size of the buffer.
+ * _getline - read a line from a file descriptor and allocate memory for it.
+ * @fd: the file descriptor from which to read the line.
+ * @line: a pointer to a char pointer where the resulting line will be stored.
  *
- * Return: number of characters read, or -1 on failure.
+ * This function reads a line from the specified file descriptor and allocates
+ * memory to store the line. The memory for the line should be freed by the
+ * caller when it is no longer needed.
+ *
+ * Return: Upon success, the function returns the number of characters read,
+ * excluding the null-terminator. On end of file or error, it returns -1.
  */
 
-ssize_t _getline(char **lineptr, size_t *n, int fd)
+int _getline(char **line, int fd)
 {
-	char *new_ptr;
-	static size_t count;
+	static char *rd;
+	char *tmp;
+	char buffer[SIZE];
+	int pos;
 
-	if (lineptr == NULL || n == NULL)
-		return (-1); /* error indicating invalid arguments */
+	pos = (rd != NULL) ? (int)(_strchr(rd, '\n') - rd) : -1;
 
-	if (*lineptr == NULL || *n == 0)
+	if (pos >= 0)
 	{
-		*n = INIT_SIZE;
-		*lineptr = malloc(*n);
+		*line = malloc((pos + 1) * sizeof(char));
+		_strncpy(*line, rd, pos);
+		(*line)[pos] = '\0';
 
-		if (*lineptr == NULL)
-			return (-1); /* error indicating the failure of malloc */
+		tmp = rd;
+		rd = _strdup(rd + pos + 1);
+		free(tmp);
+
+		return (pos);
 	}
 
-	while ((count += read(fd, *lineptr + count, INIT_SIZE)) != 0)
+	while ((pos = _read(fd, rd, buffer)) >= 0)
 	{
-		if (count >= *n - 1)
-		{
-			new_ptr = _realloc(*lineptr, *n, *n * 2);
-			if (new_ptr == NULL)
-			{
-				free(new_ptr);
-				return (-1); /* failled to allocate new memory */
-			}
-			*n *= 2;
-			*lineptr = new_ptr;
-		}
-		if ((*lineptr)[count - 1] == '\n')
+		if (pos > 0 || pos < SIZE)
 			break;
 	}
-	if (count == 0)
-		return (-1); /* file is empty, nothing to read */
 
-	(*lineptr)[count] = '\0';
+	if (pos == -1)
+	{
+		free(rd);
+		return (-1); /*reading Error*/
+	}
 
-	return (count);
+	pos = (rd != NULL) ? (int)(_strchr(rd, '\n') - rd) : -1;
+
+	if (pos >= 0)
+	{
+		*line = malloc((pos + 1) * sizeof(char));
+		_strncpy(*line, rd, pos);
+		(*line)[pos] = '\0';
+
+		tmp = rd;
+		rd = _strdup(rd + pos + 1);
+		free(tmp);
+	}
+
+	*line = NULL;
+	free(rd);
+	return (pos); /*no line found*/
+}
+
+/*
+ * _read - read data from a file descriptor and append it to existing content.
+ * @fd: The file descriptor from which to read data.
+ * @rd: a char pointer representing existing content.
+ * @buff: a buffer to store the data read from the file descriptor.
+ *
+ * Return: Upon success, the function returns the number of bytes read.
+ * On error it returns -1.
+ */
+
+int _read(int fd, char *rd, char *buff)
+{
+	int readed = read(fd, buff, SIZE);
+
+	if (readed == -1)
+		return (-1); /*reading Error*/
+
+	buff[readed] = '\0';
+	rd = (rd == NULL) ? _strdup(buff) : _strcat(rd, buff);
+
+	return (readed);
 }
