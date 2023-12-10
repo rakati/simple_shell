@@ -11,8 +11,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-int _getline(char **line, int fd);
-int _read(int fd, char *rd, char *buff);
+int _getline(char **line, const int fd);
+int _read(int fd, char **rd, char *buff);
+void process_line(char **line, char **rd, int pos);
 char *_strchr(char *s, char c);
 char *_strncpy(char *dest, char *src, int n);
 char *_strdup(char *str);
