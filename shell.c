@@ -18,7 +18,8 @@ int main(int ac, char **av, char **envp)
 	while (1)
 	{
 		_puts("$ ");
-		r = _getline(&line, fd);
+		r = _getline(fd, &line);
+		/* check _getline */
 	}
 	return (0);
 }
