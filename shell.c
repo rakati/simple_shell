@@ -10,7 +10,7 @@
  */
 int main(int ac, char **av, char **envp)
 {
-	char line;
+	char *line;
 	int fd;
 	int r;
 
