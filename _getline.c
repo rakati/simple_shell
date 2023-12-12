@@ -1,6 +1,29 @@
 #include "shell.h"
 
 /**
+ * process_line - Process a line from the existing content and
+ * update the pointers.
+ * @line: A pointer to a char pointer where the resulting line will be stored.
+ * @rd: A pointer to a char pointer representing existing content.
+ * @pos: The position of the newline character in the existing content.
+ *
+ * Return: line length or negative number represent error code
+ */
+
+static int process_line(char **line, char **rd, int pos)
+{
+	char *tmp;
+
+	*line = malloc((pos + 1) * sizeof(char));
+	_strncpy(*line, *rd, pos);
+	(*line)[pos] = '\0';
+
+	tmp = *rd;
+	*rd = _strdup(*rd + pos + 1);
+	free(tmp);
+	return (pos);
+}
+/**
  * _getline - read a line from a file descriptor and allocate memory for it.
  * @fd: the file descriptor from which to read the line.
  * @line: a pointer to a char pointer where the resulting line will be stored.
@@ -24,16 +47,16 @@ int _getline(char **line, const int fd)
 	if (pos >= 0)
 	{
 		process_line(&*line, &rd, pos);
-		return (pos);
+		return (pos + 1);
 	}
 
 	while ((pos = _read(fd, &rd, buffer)) >= 0)
 	{
-		if (pos == 0)/*this means that we reach the end of file
-			      or the user pressed Ctrl+D*/
+		if (pos == 0) /*this means that we reach the end of file
+				   or the user pressed Ctrl+D*/
 		{
 			free(rd);
-			return(-2);
+			return (-2);
 		}
 		if (pos > 0 || pos < SIZE)
 			break;
@@ -47,16 +70,16 @@ int _getline(char **line, const int fd)
 
 	pos = _strchr(rd, '\n');
 
-	if (pos >= 0)/*pos == 0 here means that the newline charcter is found
-		       at the beginning of the buffer*/
+	if (pos >= 0) /*pos == 0 here means that the newline charcter is found
+				at the beginning of the buffer*/
 	{
 		process_line(&*line, &rd, pos);
-		return (pos);
+		return (pos + 1);
 	}
 
 	*line = NULL;
 	free(rd);
-	return (pos); /*pos here will have a value less thhan 0*/
+	return (pos + 1); /*pos here will have a value less thhan 0*/
 }
 
 /**
@@ -82,25 +105,4 @@ int _read(int fd, char **rd, char *buff)
 	}
 
 	return (readed);
-}
-
-/**
- * process_line - Process a line from the existing content and
- * update the pointers.
- * @line: A pointer to a char pointer where the resulting line will be stored.
- * @rd: A pointer to a char pointer representing existing content.
- * @pos: The position of the newline character in the existing content.
- */
-
-void process_line(char **line, char **rd, int pos)
-{
-	char *tmp;
-
-	*line = malloc((pos + 1) * sizeof(char));
-	_strncpy(*line, *rd, pos);
-	(*line)[pos] = '\0';
-
-	tmp = *rd;
-	*rd = _strdup(*rd + pos + 1);
-	free(tmp);
 }
