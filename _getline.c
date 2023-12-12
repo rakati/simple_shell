@@ -9,7 +9,6 @@
  *
  * Return: line length or negative number represent error code
  */
-
 static int process_line(char **line, char **rd, int pos)
 {
 	char *tmp;
@@ -23,6 +22,7 @@ static int process_line(char **line, char **rd, int pos)
 	free(tmp);
 	return (pos);
 }
+
 /**
  * _getline - read a line from a file descriptor and allocate memory for it.
  * @fd: the file descriptor from which to read the line.
@@ -35,20 +35,15 @@ static int process_line(char **line, char **rd, int pos)
  * Return: Upon success, the function returns the number of characters read,
  * excluding the null-terminator. On end of file or error, it returns -1.
  */
-
 int _getline(char **line, const int fd)
 {
 	static char *rd = NULL;
 	char buffer[SIZE];
 	int pos;
 
-	pos = _strchr(rd, '\n');
-
+	pos = _index(rd, '\n');
 	if (pos >= 0)
-	{
-		process_line(&*line, &rd, pos);
-		return (pos + 1);
-	}
+		return (process_line(&*line, &rd, pos) + 1);
 
 	while ((pos = _read(fd, &rd, buffer)) >= 0)
 	{
@@ -68,7 +63,7 @@ int _getline(char **line, const int fd)
 		return (-1); /*reading Error*/
 	}
 
-	pos = _strchr(rd, '\n');
+	pos = _index(rd, '\n');
 
 	if (pos >= 0) /*pos == 0 here means that the newline charcter is found
 				at the beginning of the buffer*/
