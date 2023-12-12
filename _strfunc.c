@@ -1,23 +1,20 @@
 #include "shell.h"
 
 /**
- * _strchr - Entry point
- * @s: input
- * @c: input
- * Return: Always 0 (Success)
+ * _index - Find index of a character in a string
+ * @s: string - where we try to locate character in
+ * @c: char - character to find in a string
+ * Return: index of the character inside the string s or -1 if not found
  */
-int _strchr(char *s, char c)
+int _index(char *s, char c)
 {
-	int i = 0;
+	int i;
 
 	if (s == NULL)
 		return (-1);
-
-	for (; s[i] >= '\0'; i++)
-	{
+	for (i = 0; s[i] != '\0'; i++)
 		if (s[i] == c)
 			return (i);
-	}
 	return (-1);
 }
 
@@ -68,11 +65,10 @@ char *_strdup(char *str)
 	if (newstr == NULL)
 		return (NULL);
 
-	for (i = 0; str[i] ; i++)
+	for (i = 0; str[i]; i++)
 		newstr[i] = str[i];
 
 	newstr[i] = '\0';
-
 
 	return (newstr);
 }
