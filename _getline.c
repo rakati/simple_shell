@@ -14,6 +14,8 @@ static int process_line(char **line, char **rd, int pos)
 	char *tmp;
 
 	*line = malloc((pos + 1) * sizeof(char));
+	if (*line == NULL)
+		return (-1);
 	_strncpy(*line, *rd, pos);
 	(*line)[pos] = '\0';
 
@@ -32,8 +34,8 @@ static int process_line(char **line, char **rd, int pos)
  * memory to store the line. The memory for the line should be freed by the
  * caller when it is no longer needed.
  *
- * Return: Upon success, the function returns the number of characters read,
- * excluding the null-terminator. On end of file or error, it returns -1.
+ * Return: On success, returns the number of characters read, including
+ * delimeter, but not including the null-terminator, or -1 on error.
  */
 int _getline(char **line, const int fd)
 {
@@ -44,7 +46,6 @@ int _getline(char **line, const int fd)
 	pos = _index(rd, '\n');
 	if (pos >= 0)
 		return (process_line(&*line, &rd, pos) + 1);
-
 	while ((pos = _read(fd, &rd, buffer)) >= 0)
 	{
 		if (pos == 0) /*this means that we reach the end of file
