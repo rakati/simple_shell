@@ -15,20 +15,26 @@
 
 int _getline(char **line, const int fd)
 {
-	static char *rd;
+	static char *rd = NULL;
 	char buffer[SIZE];
 	int pos;
 
-	pos = (rd != NULL) ? (int)(_strchr(rd, '\n') - rd) : -1;
+	pos = _strchr(rd, '\n');
 
 	if (pos >= 0)
 	{
-		func(*line, &rd, pos);
+		process_line(&*line, &rd, pos);
 		return (pos);
 	}
 
 	while ((pos = _read(fd, &rd, buffer)) >= 0)
 	{
+		if (pos == 0)/*this means that we reach the end of file
+			      or the user pressed Ctrl+D*/
+		{
+			free(rd);
+			return(-2);
+		}
 		if (pos > 0 || pos < SIZE)
 			break;
 	}
@@ -39,17 +45,18 @@ int _getline(char **line, const int fd)
 		return (-1); /*reading Error*/
 	}
 
-	pos = (rd != NULL) ? (int)(_strchr(rd, '\n') - rd) : -1;
+	pos = _strchr(rd, '\n');
 
-	if (pos >= 0)
+	if (pos >= 0)/*pos == 0 here means that the newline charcter is found
+		       at the beginning of the buffer*/
 	{
-		func(*line, &rd, pos);
+		process_line(&*line, &rd, pos);
 		return (pos);
 	}
 
 	*line = NULL;
 	free(rd);
-	return (pos); /*no line found*/
+	return (pos); /*pos here will have a value less thhan 0*/
 }
 
 /**
@@ -68,9 +75,11 @@ int _read(int fd, char **rd, char *buff)
 
 	if (readed == -1)
 		return (-1); /*reading Error*/
-
-	buff[readed] = '\0';
-	*rd = (*rd == NULL) ? _strdup(buff) : _strcat(*rd, buff);
+	if (readed > 0)
+	{
+		buff[readed] = '\0';
+		*rd = (*rd == NULL) ? _strdup(buff) : _strcat(*rd, buff);
+	}
 
 	return (readed);
 }
