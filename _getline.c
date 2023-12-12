@@ -16,11 +16,15 @@ static int process_line(char **line, char **rd, int pos)
 	*line = malloc((pos + 1) * sizeof(char));
 	if (*line == NULL)
 		return (-1);
-	_strncpy(*line, *rd, pos);
+	*line = _strncpy(*line, *rd, pos);
+	if (*line == NULL)
+		return (-1);
 	(*line)[pos] = '\0';
 
 	tmp = *rd;
 	*rd = _strdup(*rd + pos + 1);
+	if (*rd == NULL)
+		return (-1);
 	free(tmp);
 	return (pos);
 }
