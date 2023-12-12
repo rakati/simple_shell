@@ -19,12 +19,16 @@ int _index(const char *s, const char c)
 }
 
 /**
- * _strncpy - copy a string
+ * _strncpy - copies at most n bytes from the string pointed to by src,
+ * including the terminating null byte, to the buffer pointed to by dest.
+ *
+ * If the length of src is less than n, the function writes additional null
+ * bytes to dest to ensure that a total of n bytes are written.
  * @dest: input value
  * @src: input value
  * @n: input value
  *
- * Return: dest
+ * Return: A pointer to the destination string dest.
  */
 char *_strncpy(char *dest, const char *src, size_t n)
 {
