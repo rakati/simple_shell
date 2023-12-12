@@ -26,22 +26,23 @@ int _index(const char *s, const char c)
  *
  * Return: dest
  */
-char *_strncpy(char *dest, char *src, int n)
+char *_strncpy(char *dest, const char *src, size_t n)
 {
-	int j;
+	size_t j;
 
 	j = 0;
-	while (j < n && src[j] != '\0')
+	while (j < n)
 	{
 		dest[j] = src[j];
 		j++;
+		if (src[j - 1] != '\0')
+			break;
 	}
 	while (j < n)
 	{
 		dest[j] = '\0';
 		j++;
 	}
-
 	return (dest);
 }
 
