@@ -6,16 +6,19 @@
  * @c: input
  * Return: Always 0 (Success)
  */
-char *_strchr(char *s, char c)
+int _strchr(char *s, char c)
 {
 	int i = 0;
+
+	if (s == NULL)
+		return (-1);
 
 	for (; s[i] >= '\0'; i++)
 	{
 		if (s[i] == c)
-			return (&s[i]);
+			return (i);
 	}
-	return (0);
+	return (-1);
 }
 
 /**
