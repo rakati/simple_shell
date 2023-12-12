@@ -2,11 +2,11 @@
 
 /**
  * _index - Find index of a character in a string
- * @s: string - where we try to locate character in
- * @c: char - character to find in a string
+ * @s: string - the source string we try to locate character in
+ * @c: char - character to find in the string `s`
  * Return: index of the character inside the string s or -1 if not found
  */
-int _index(char *s, char c)
+int _index(const char *s, const char c)
 {
 	int i;
 
