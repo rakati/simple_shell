@@ -19,13 +19,13 @@ int _read(int fd, char **rd, char *buff);
 /*
  * Utility functions
  */
-int _index(char *s, char c);
+int _index(const char *s, const char c);
 
 /*
  * String Utility functions
  */
 char *_strdup(char *str);
-char *_strncpy(char *dest, char *src, int n);
+char *_strncpy(char *dest, const char *src, size_t n);
 int _strlen(char *);
 void _puts(char *);
 char *_strcat(char *dest, char *src);
