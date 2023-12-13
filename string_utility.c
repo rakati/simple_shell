@@ -7,7 +7,7 @@
  * Return: len of string otherwise -1 if ptr to string is NULL
  */
 
-int _strlen(char *s)
+int _strlen(const char *s)
 {
 	int i = 0;
 
@@ -25,7 +25,7 @@ int _strlen(char *s)
  * Return: Number of character printed, otherwise -1 if an error occurred
  */
 
-void _puts(char *s)
+int _puts(char *s)
 {
 	int len;
 
@@ -52,7 +52,7 @@ char *_strncpy(char *dest, const char *src, size_t n)
 	size_t j;
 
 	j = 0;
-	while (j < n && src[j - 1] != '\0')
+	while (j < n && src[j] != '\0')
 	{
 		dest[j] = src[j];
 		j++;
@@ -71,7 +71,7 @@ char *_strncpy(char *dest, const char *src, size_t n)
  * @str: the source string
  * Return: returns a pointer to the duplicated string.
  */
-char *_strdup(char *str)
+char *_strdup(const char *str)
 {
 	int len, i;
 	char *newstr;
@@ -98,7 +98,7 @@ char *_strdup(char *str)
  * @dest: input value
  * @src: input value
  *
- * Return: void
+ * Return: pointer to dest string
  */
 char *_strcat(char *dest, char *src)
 {
@@ -107,9 +107,8 @@ char *_strcat(char *dest, char *src)
 
 	i = 0;
 	while (dest[i] != '\0')
-	{
 		i++;
-	}
+
 	j = 0;
 	while (src[j] != '\0')
 	{
@@ -117,7 +116,6 @@ char *_strcat(char *dest, char *src)
 		i++;
 		j++;
 	}
-
 	dest[i] = '\0';
 	return (dest);
 }
