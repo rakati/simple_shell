@@ -79,12 +79,12 @@ typedef struct cmd_s
  * @next: Pointer to the next node in the linked list.
  */
 
-typedef struct Node
+typedef struct s_env
 {
 	char *key;
 	char *value;
 	struct Node *next;
-} Node;
+} t_env;
 
 void print_list(Node *head);
 Node *add_Node(Node *head, char *key, char *value);
