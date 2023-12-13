@@ -3,6 +3,8 @@
 
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdio.h>
+#include <errno.h>
 
 /*
  * String Utility functions
@@ -64,5 +66,29 @@ typedef struct cmd_s
 /*
  * Implemented Builtin functions
  */
+
+/*
+ * the linked list node and functions for environment variables.
+ */
+
+/**
+ * struct Node - Represents a node in a linked list.
+ * @key: The key associated with the node.
+ * @value: The value associated with the key.
+ * @next: Pointer to the next node in the linked list.
+ */
+
+typedef struct Node
+{
+	char *key;
+	char *value;
+	struct Node *next;
+} Node;
+
+void print_list(Node *head);
+Node *add_Node(Node *head, char *key, char *value);
+Node *remove_Node(Node *head, char *key);
+Node *initialize_list(char *envp[]);
+void free_list(Node *head);
 
 #endif
