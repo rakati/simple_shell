@@ -40,7 +40,7 @@ Node *add_Node(Node *head, char *key, char *value)
 	if (newNode == NULL)
 	{
 		perror("Error: Memory allocation failed");
-		exit(EXIT_FAILURE);
+		return (NULL);
 	}
 
 	newNode->key = _strdup(key);
@@ -48,7 +48,7 @@ Node *add_Node(Node *head, char *key, char *value)
 	{
 		perror("Error: Memory allocation failed");
 		free(newNode);
-		exit(EXIT_FAILURE);
+		return (NULL);
 	}
 
 	newNode->value = _strdup(value);
