@@ -3,18 +3,13 @@
 int main()
 {
 	char *line;
-	int fd, readed;
+	int fd, r;
 
-	fd = open("testing.txt",O_RDONLY);
-
-	while(1)
+	fd = open("testing.txt", O_RDONLY);
+	while ((r = _getline(&line, fd)) > 0)
 	{
-		readed = _getline(&line, fd);
-		if (readed == -1 || readed == -2)
-			exit(EXIT_FAILURE);
-		printf("%s\n%d\n", line, readed);
+		printf("%s\n", line);
 		free(line);
 	}
-
 	return (0);
 }
