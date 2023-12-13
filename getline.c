@@ -9,22 +9,29 @@
  *
  * Return: line length or negative number represent error code
  */
-static int process_line(char **line, char **rd, int pos)
+int process_line(char **line, char **rd, int pos)
 {
 	char *tmp;
 
-	*line = malloc((pos + 1) * sizeof(char));
-	if (*line == NULL)
+	if (pos < 0)
 		return (-1);
+	*line = malloc(pos + 1);
+	if (*line == NULL)
+		return (-2);
 	*line = _strncpy(*line, *rd, pos);
 	if (*line == NULL)
-		return (-1);
+		return (-2);
 	(*line)[pos] = '\0';
-
+	if ((*rd)[pos + 1] == '\0')
+	{
+		free(*rd);
+		*rd = NULL;
+		return (pos);
+	}
 	tmp = *rd;
 	*rd = _strdup(*rd + pos + 1);
 	if (*rd == NULL)
-		return (-1);
+		return (-2);
 	free(tmp);
 	return (pos);
 }
@@ -43,66 +50,28 @@ static int process_line(char **line, char **rd, int pos)
  */
 int _getline(char **line, const int fd)
 {
-	static char *rd = NULL;
-	char buffer[SIZE];
-	int pos;
-
-	pos = _index(rd, '\n');
-	if (pos >= 0)
-		return (process_line(&*line, &rd, pos) + 1);
-	while ((pos = _read(fd, &rd, buffer)) >= 0)
-	{
-		if (pos == 0) /*this means that we reach the end of file
-				   or the user pressed Ctrl+D*/
-		{
-			free(rd);
-			return (-2);
-		}
-		if (pos > 0 || pos < SIZE)
-			break;
-	}
-
-	if (pos == -1)
-	{
-		free(rd);
-		return (-1); /*reading Error*/
-	}
-
-	pos = _index(rd, '\n');
-
-	if (pos >= 0) /*pos == 0 here means that the newline charcter is found
-				at the beginning of the buffer*/
-	{
-		process_line(&*line, &rd, pos);
-		return (pos + 1);
-	}
+	static char *rd;
+	char buff[BUFF_SIZE];
+	int pos, r;
 
 	*line = NULL;
-	free(rd);
-	return (pos + 1); /*pos here will have a value less thhan 0*/
-}
-
-/**
- * _read - read data from a file descriptor and append it to existing content.
- * @fd: The file descriptor from which to read data.
- * @rd: a char pointer representing existing content.
- * @buff: a buffer to store the data read from the file descriptor.
- *
- * Return: Upon success, the function returns the number of bytes read.
- * On error it returns -1.
- */
-
-int _read(int fd, char **rd, char *buff)
-{
-	int readed = read(fd, buff, SIZE);
-
-	if (readed == -1)
-		return (-1); /*reading Error*/
-	if (readed > 0)
+	pos = _index(rd, '\n');
+	if (pos >= 0)
+		return (process_line(line, &rd, pos) + 1);
+	while ((r = read(fd, buff, BUFF_SIZE)) > 0)
 	{
-		buff[readed] = '\0';
-		*rd = (*rd == NULL) ? _strdup(buff) : _strcat(*rd, buff);
+		buff[r] = '\0';
+		if (rd == NULL)
+			rd = _strdup(buff);
+		else
+			rd = _strcat(_realloc(rd, _strlen(rd) + r + 1), buff);
+		pos = _index(rd, '\n');
+		if (pos >= 0 || r < BUFF_SIZE)
+			break;
 	}
-
-	return (readed);
+	if (r != -1)
+		return (process_line(line, &rd, pos >= 0 ? pos : _strlen(rd)) + 1);
+	if (rd != NULL)
+		free(rd);
+	return (-1);
 }
