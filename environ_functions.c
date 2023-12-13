@@ -5,9 +5,9 @@
  * @head: The head of the linked list.
  */
 
-void print_list(Node *head)
+void print_list(t_env *head)
 {
-	Node *current;
+	t_env *current;
 
 	current = head;
 
@@ -31,12 +31,12 @@ void print_list(Node *head)
  * Return: The updated head of the linked list.
  */
 
-Node *add_Node(Node *head, char *key, char *value)
+t_env *add_Node(t_env *head, char *key, char *value)
 {
-	Node *newNode;
-	Node *current;
+	t_env *newNode;
+	t_env *current;
 
-	newNode = malloc(sizeof(Node));
+	newNode = malloc(sizeof(t_env));
 	if (newNode == NULL)
 	{
 		perror("Error: Memory allocation failed");
@@ -79,10 +79,10 @@ Node *add_Node(Node *head, char *key, char *value)
  * Return: The updated head of the linked list.
  */
 
-Node *remove_Node(Node *head, char *key)
+t_env *remove_Node(t_env *head, char *key)
 {
-	Node *current = head;
-	Node *prev = NULL;
+	t_env *current = head;
+	t_env *prev = NULL;
 
 	while (current != NULL)
 	{
@@ -114,9 +114,9 @@ Node *remove_Node(Node *head, char *key)
  * Return: The head of the initialized linked list.
  */
 
-Node *initialize_list(char *envp[])
+t_env *initialize_list(char *envp[])
 {
-	Node *head = NULL;
+	t_env *head = NULL;
 	int i = 0;
 	char *token;
 
@@ -137,8 +137,8 @@ Node *initialize_list(char *envp[])
 
 void free_list(Node *head)
 {
-	Node *current = head;
-	Node *next;
+	t_env *current = head;
+	t_env *next;
 
 	while (current != NULL)
 	{
