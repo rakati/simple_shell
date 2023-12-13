@@ -9,7 +9,7 @@
  *
  * Return: line length or negative number represent error code
  */
-int process_line(char **line, char **rd, int pos)
+static int process_line(char **line, char **rd, int pos)
 {
 	char *tmp;
 
