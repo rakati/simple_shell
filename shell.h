@@ -1,7 +1,7 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#define SIZE 128
+#define BUFF_SIZE 1024
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -20,14 +20,15 @@ int _read(int fd, char **rd, char *buff);
  * Utility functions
  */
 int _index(const char *s, const char c);
+void *_realloc(void *ptr, size_t size);
 
 /*
  * String Utility functions
  */
-char *_strdup(char *str);
+char *_strdup(const char *str);
 char *_strncpy(char *dest, const char *src, size_t n);
-int _strlen(char *);
-void _puts(char *);
+int _strlen(const char *);
+int _puts(char *);
 char *_strcat(char *dest, char *src);
 
 /*
