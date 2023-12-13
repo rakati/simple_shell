@@ -86,10 +86,10 @@ typedef struct s_env
 	struct Node *next;
 } t_env;
 
-void print_list(Node *head);
-Node *add_Node(Node *head, char *key, char *value);
-Node *remove_Node(Node *head, char *key);
-Node *initialize_list(char *envp[]);
-void free_list(Node *head);
+void print_list(t_env *head);
+t_env *add_Node(t_env *head, char *key, char *value);
+t_env *remove_Node(t_env *head, char *key);
+t_env *initialize_list(char *envp[]);
+void free_list(t_env *head);
 
 #endif
