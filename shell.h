@@ -13,6 +13,7 @@
 int _strlen(char *);
 void _puts(char *);
 int _getline(const int fd, char **line);
+int _strcmp(char *, char *);
 
 /*
  * Parser functions
@@ -78,17 +79,17 @@ typedef struct cmd_s
  * @next: Pointer to the next node in the linked list.
  */
 
-typedef struct Node
+typedef struct s_env
 {
 	char *key;
 	char *value;
 	struct Node *next;
-} Node;
+} t_env;
 
-void print_list(Node *head);
-Node *add_Node(Node *head, char *key, char *value);
-Node *remove_Node(Node *head, char *key);
-Node *initialize_list(char *envp[]);
-void free_list(Node *head);
+void print_list(t_env *head);
+t_env *add_Node(t_env *head, char *key, char *value);
+t_env *remove_Node(t_env *head, char *key);
+t_env *initialize_list(char *envp[]);
+void free_list(t_env *head);
 
 #endif
