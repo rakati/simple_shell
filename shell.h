@@ -1,41 +1,23 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#define BUFF_SIZE 1024
-
-#include <stdlib.h>
-#include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
-/*
- * getline function
- */
-int _getline(char **line, const int fd);
-int _read(int fd, char **rd, char *buff);
-
-/*
- * Utility functions
- */
-int _index(const char *s, const char c);
-void *_realloc(void *ptr, size_t size);
+#include <stdio.h>
+#include <errno.h>
 
 /*
  * String Utility functions
  */
-char *_strdup(const char *str);
-char *_strncpy(char *dest, const char *src, size_t n);
-int _strlen(const char *);
-int _puts(char *);
-char *_strcat(char *dest, char *src);
+
+int _strlen(char *);
+void _puts(char *);
+int _getline(const int fd, char **line);
+int _strcmp(char *, char *);
 
 /*
  * Parser functions
  */
-char *_strtok(char *str, const char *delim);
-char *_strpbrk(char *s, const char *accept);
 
 /**
  * enum rel - enum for type of relation between commands in a single line
@@ -85,5 +67,29 @@ typedef struct cmd_s
 /*
  * Implemented Builtin functions
  */
+
+/*
+ * the linked list node and functions for environment variables.
+ */
+
+/**
+ * struct Node - Represents a node in a linked list.
+ * @key: The key associated with the node.
+ * @value: The value associated with the key.
+ * @next: Pointer to the next node in the linked list.
+ */
+
+typedef struct Node
+{
+	char *key;
+	char *value;
+	struct Node *next;
+} Node;
+
+void print_list(Node *head);
+Node *add_Node(Node *head, char *key, char *value);
+Node *remove_Node(Node *head, char *key);
+Node *initialize_list(char *envp[]);
+void free_list(Node *head);
 
 #endif
