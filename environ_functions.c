@@ -57,7 +57,7 @@ t_env *add_Node(t_env *head, char *key, char *value)
 		perror("Error: Memory allocation failed");
 		free(newNode->key);
 		free(newNode);
-		exit(EXIT_FAILURE);
+		return (NULL);
 	}
 
 	newNode->next = NULL;
@@ -103,7 +103,6 @@ t_env *remove_Node(t_env *head, char *key)
 		current = current->next;
 	}
 
-	perror("Error, variable not found");
 	return (head);
 }
 
