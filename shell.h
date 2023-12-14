@@ -1,6 +1,8 @@
 #ifndef SHELL_H
 #define SHELL_H
 
+#define BUFF_SIZE 1024
+
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -13,7 +15,19 @@
 int _strlen(char *);
 void _puts(char *);
 int _getline(const int fd, char **line);
+static int process_line(char **line, char **rd, int pos);
 int _strcmp(char *, char *);
+char *_strncpy(char *, const char *, size_t);
+char *_strdup(const char *);
+char *_strcat(char *, char *);
+
+/*
+ * General Utility functions
+ */
+
+int _index(const char *, const char);
+void *_realloc(void *, size_t);
+
 
 /*
  * Parser functions
