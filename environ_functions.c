@@ -5,15 +5,15 @@
  * @head: The head of the linked list.
  */
 
-void print_list(t_env *head)
+void print_list(t_pair *head)
 {
-	t_env *current;
+	t_pair *current;
 
 	current = head;
 
 	while (current != NULL)
 	{
-		if (current->alias)
+		if (current->is_alias)
 		{
 			_puts(current->key);
 			write(1, "='", 2);
@@ -38,17 +38,17 @@ void print_list(t_env *head)
  * @head: The head of the linked list.
  * @key: The key to be added.
  * @value: The value associated with the key.
- * @alias: Flag indicating whether it's an alias (1) or
+ * @is_alias: Flag indicating whether it's an is_alias (1) or
  * environment variable (0).
  * Return: The updated head of the linked list.
  */
 
-t_env *add_Node(t_env *head, char *key, char *value, int alias)
+t_pair *add_Node(t_pair *head, char *key, char *value, int is_alias)
 {
-	t_env *newNode;
-	t_env *current;
+	t_pair *newNode;
+	t_pair *current;
 
-	newNode = malloc(sizeof(t_env));
+	newNode = malloc(sizeof(t_pair));
 	if (newNode == NULL)
 	{
 		perror("Error: Memory allocation failed");
@@ -72,7 +72,7 @@ t_env *add_Node(t_env *head, char *key, char *value, int alias)
 		return (NULL);
 	}
 
-	newNode->alias = alias;
+	newNode->is_alias = is_alias;
 	newNode->next = NULL;
 	if (head == NULL)
 		return (newNode);
@@ -89,19 +89,19 @@ t_env *add_Node(t_env *head, char *key, char *value, int alias)
  * remove_Node - Removes a node with the specified key from the linked list.
  * @head: The head of the linked list.
  * @key: The key of the node to be removed.
- * @alias: Flag indicating whether it's an alias (1) or
+ * @is_alias: Flag indicating whether it's an is_alias (1) or
  * environment variable (0).
  * Return: The updated head of the linked list.
  */
 
-t_env *remove_Node(t_env *head, char *key, int alias)
+t_pair *remove_Node(t_pair *head, char *key, int is_alias)
 {
-	t_env *current = head;
-	t_env *prev = NULL;
+	t_pair *current = head;
+	t_pair *prev = NULL;
 
 	while (current != NULL)
 	{
-		if (_strcmp(current->key, key) == 0 && current->alias == alias)
+		if (_strcmp(current->key, key) == 0 && current->is_alias == is_alias)
 		{
 			if (prev == NULL)
 				head = current->next;
@@ -128,9 +128,9 @@ t_env *remove_Node(t_env *head, char *key, int alias)
  * Return: The head of the initialized linked list.
  */
 
-t_env *initialize_list(char *envp[])
+t_pair *initialize_list(char *envp[])
 {
-	t_env *head = NULL;
+	t_pair *head = NULL;
 	int i = 0;
 	char *token;
 
@@ -151,8 +151,8 @@ t_env *initialize_list(char *envp[])
 
 void free_list(Node *head)
 {
-	t_env *current = head;
-	t_env *next;
+	t_pair *current = head;
+	t_pair *next;
 
 	while (current != NULL)
 	{
