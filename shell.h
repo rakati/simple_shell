@@ -5,6 +5,7 @@
 
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
 
@@ -87,7 +88,7 @@ typedef struct cmd_s
  */
 
 /**
- * struct Node - Represents a node in a linked list.
+ * struct s_env - Represents a node in a linked list.
  * @key: The key associated with the node.
  * @value: The value associated with the key.
  * @next: Pointer to the next node in the linked list.
