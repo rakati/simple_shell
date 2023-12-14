@@ -13,10 +13,20 @@ void print_list(t_env *head)
 
 	while (current != NULL)
 	{
-		_puts(current->key);
-		write(1, "=", 1);
-		_puts(current->value);
-		write(1, "\n", 1);
+		if (current->alias)
+		{
+			_puts(current->key);
+			write(1, "='", 2);
+			_puts(current->value);
+			write(1, "'\n", 2);
+		}
+		else
+		{
+			_puts(current->key);
+			write(1, "=", 1);
+			_puts(current->value);
+			write(1, "\n", 1);
+		}
 
 		current = current->next;
 	}
@@ -28,10 +38,12 @@ void print_list(t_env *head)
  * @head: The head of the linked list.
  * @key: The key to be added.
  * @value: The value associated with the key.
+ * @alias: Flag indicating whether it's an alias (1) or
+ * environment variable (0).
  * Return: The updated head of the linked list.
  */
 
-t_env *add_Node(t_env *head, char *key, char *value)
+t_env *add_Node(t_env *head, char *key, char *value, int alias)
 {
 	t_env *newNode;
 	t_env *current;
@@ -59,7 +71,8 @@ t_env *add_Node(t_env *head, char *key, char *value)
 		free(newNode);
 		return (NULL);
 	}
-
+	
+	newNode->alias = alias;
 	newNode->next = NULL;
 	if (head == NULL)
 		return (newNode);
@@ -76,17 +89,19 @@ t_env *add_Node(t_env *head, char *key, char *value)
  * remove_Node - Removes a node with the specified key from the linked list.
  * @head: The head of the linked list.
  * @key: The key of the node to be removed.
+ * @alias: Flag indicating whether it's an alias (1) or
+ * environment variable (0).
  * Return: The updated head of the linked list.
  */
 
-t_env *remove_Node(t_env *head, char *key)
+t_env *remove_Node(t_env *head, char *key, int alias)
 {
 	t_env *current = head;
 	t_env *prev = NULL;
 
 	while (current != NULL)
 	{
-		if (_strcmp(current->key, key) == 0)
+		if (_strcmp(current->key, key) == 0 && current->alias == alias)
 		{
 			if (prev == NULL)
 				head = current->next;
