@@ -26,51 +26,16 @@ int parse(char *line, t_cmd **cmd)
 char *_strtok(char *str, const char *delim)
 {
 	static char *token, *next;
-
-	if (str != NULL)
-	{
-		token = str;
-		next = str;
-	}
-
-	if (next == NULL || *token == '\0')
-		return (NULL);
-
-	token = next;
-	next = _strpbrk(next, delim);
-
-	if (next != NULL)
-	{
-		*next = '\0';
-		next++;
-	}
-
-	return (token);
-}
-
-/**
- * _strpbrk - locates the first occurrence in the string s of any
- * of the bytes in the string accept.
- * @s: input
- * @accept: input
- * Return: pointer to the byte in s that matches one of the bytes in accept,
- * or NULL if no such byte is found.
- */
-char *_strpbrk(char *s, const char *accept)
-{
 	int i;
 
-	while (*s != '\0')
-	{
-		for (i = 0; accept[i] != '\0'; i++)
-		{
-			if (*s == accept[i])
-			{
-				return (s);
-			}
-		}
-		s++;
-	}
-
-	return (NULL);
+	next = ltrim(str != NULL ? str : next, (char *)delim);
+	if (next == NULL || *next == '\0')
+		return (NULL);
+	token = next;
+	for (i = 0; token[i]; i++)
+		if (_index(delim, token[i]) != -1)
+			break;
+	next += i + (token[i] != '\0');
+	token[i] = '\0';
+	return (token);
 }
