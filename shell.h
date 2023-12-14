@@ -29,10 +29,12 @@ char *_strcat(char *, char *);
 int _index(const char *, const char);
 void *_realloc(void *, size_t);
 
-
 /*
  * Parser functions
  */
+
+char *_strpbrk(char *s, const char *accept);
+char *_strtok(char *str, const char *delim);
 
 /**
  * enum rel - enum for type of relation between commands in a single line
