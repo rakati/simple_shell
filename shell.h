@@ -90,26 +90,26 @@ typedef struct cmd_s
  */
 
 /**
- * struct s_env - Represents a node in a linked list.
+ * struct s_pair - Represents a node in a linked list.
  * @key: The key associated with the node.
  * @value: The value associated with the key.
  * @next: Pointer to the next node in the linked list.
- * @alias: Flag to indicate whether it's an alias (1)
+ * @is_alias: Flag to indicate whether it's an alias (1)
  * or environment variable (0)
  */
 
-typedef struct s_env
+typedef struct s_pair
 {
 	char *key;
 	char *value;
-	struct s_env *next;
-	int alias;
-} t_env;
+	struct s_pair *next;
+	int is_alias;
+} t_pair;
 
-void print_list(t_env *head);
-t_env *add_Node(t_env *head, char *key, char *value, int alias);
-t_env *remove_Node(t_env *head, char *key, int alias);
-t_env *initialize_list(char *envp[]);
-void free_list(t_env *head);
+void print_list(t_pair *head);
+t_pair *add_Node(t_pair *head, char *key, char *value, int is_alias);
+t_pair *remove_Node(t_pair *head, char *key, int is_alias);
+t_pair *initialize_list(char *envp[]);
+void free_list(t_pair *head);
 
 #endif
