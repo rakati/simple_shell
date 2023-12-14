@@ -103,7 +103,7 @@ typedef struct s_env
 	char *key;
 	char *value;
 	struct s_env *next;
-	int alias
+	int alias;
 } t_env;
 
 void print_list(t_env *head);
