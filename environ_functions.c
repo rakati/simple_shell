@@ -71,7 +71,7 @@ t_env *add_Node(t_env *head, char *key, char *value, int alias)
 		free(newNode);
 		return (NULL);
 	}
-	
+
 	newNode->alias = alias;
 	newNode->next = NULL;
 	if (head == NULL)
