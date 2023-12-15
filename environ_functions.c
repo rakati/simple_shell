@@ -1,11 +1,11 @@
 #include "shell.h"
 
 /**
- * print_list - Prints the key-value pairs of the linked list.
+ * print_pair_list - Prints the key-value pairs of the linked list.
  * @head: The head of the linked list.
  */
 
-void print_list(t_pair *head)
+void print_pair_list(t_pair *head)
 {
 	t_pair *current;
 
@@ -33,7 +33,7 @@ void print_list(t_pair *head)
 }
 
 /**
- * add_Node - Adds a new node with the specified key and value
+ * add_pair_node - Adds a new node with the specified key and value
  * to the end of the linked list.
  * @head: The head of the linked list.
  * @key: The key to be added.
@@ -43,50 +43,51 @@ void print_list(t_pair *head)
  * Return: The updated head of the linked list.
  */
 
-t_pair *add_Node(t_pair *head, char *key, char *value, int is_alias)
+t_pair *add_pair_node(t_pair *head, char *key, char *value, int is_alias)
 {
-	t_pair *newNode;
+	t_pair *new;
 	t_pair *current;
 
-	newNode = malloc(sizeof(t_pair));
-	if (newNode == NULL)
+	new = malloc(sizeof(t_pair));
+	if (new == NULL)
 	{
 		perror("Error: Memory allocation failed");
 		return (NULL);
 	}
 
-	newNode->key = _strdup(key);
-	if (newNode->key == NULL)
+	new->key = _strdup(key);
+	if (new->key == NULL)
 	{
 		perror("Error: Memory allocation failed");
-		free(newNode);
+		free(new);
 		return (NULL);
 	}
 
-	newNode->value = _strdup(value);
-	if (newNode->value == NULL)
+	new->value = _strdup(value);
+	if (new->value == NULL)
 	{
 		perror("Error: Memory allocation failed");
-		free(newNode->key);
-		free(newNode);
+		free(new->key);
+		free(new);
 		return (NULL);
 	}
 
-	newNode->is_alias = is_alias;
-	newNode->next = NULL;
+	new->is_alias = is_alias;
+	new->next = NULL;
 	if (head == NULL)
-		return (newNode);
+		return (new);
 
 	current = head;
 	while (current->next != NULL)
 		current = current->next;
 
-	current->next = newNode;
+	current->next = new;
 	return (head);
 }
 
 /**
- * remove_Node - Removes a node with the specified key from the linked list.
+ * remove_pair_node - Removes a pair node with the specified key from
+ * the linked list.
  * @head: The head of the linked list.
  * @key: The key of the node to be removed.
  * @is_alias: Flag indicating whether it's an is_alias (1) or
@@ -94,7 +95,7 @@ t_pair *add_Node(t_pair *head, char *key, char *value, int is_alias)
  * Return: The updated head of the linked list.
  */
 
-t_pair *remove_Node(t_pair *head, char *key, int is_alias)
+t_pair *remove_pair_node(t_pair *head, char *key, int is_alias)
 {
 	t_pair *current = head;
 	t_pair *prev = NULL;
@@ -128,7 +129,7 @@ t_pair *remove_Node(t_pair *head, char *key, int is_alias)
  * Return: The head of the initialized linked list.
  */
 
-t_pair *initialize_list(char *envp[])
+t_pair *initialize_pair_list(char *envp[])
 {
 	t_pair *head = NULL;
 	int i = 0;
@@ -137,7 +138,7 @@ t_pair *initialize_list(char *envp[])
 	while (envp[i] != NULL)
 	{
 		token = _strtok(envp[i], "=");
-		head = add_Node(head, token, _strtok(NULL, "="));
+		head = add_pair_node(head, token, _strtok(NULL, "="), 0);
 		i++;
 	}
 
@@ -145,11 +146,11 @@ t_pair *initialize_list(char *envp[])
 }
 
 /**
- * free_list - Frees the memory occupied by the linked list.
- * @head: The head of the linked list.
+ * free_pairs_list - Frees the memory occupied by the pairs linked list.
+ * @head: The head of the pairs linked list.
  */
 
-void free_list(Node *head)
+void free_pairs_list(t_pair *head)
 {
 	t_pair *current = head;
 	t_pair *next;

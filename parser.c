@@ -8,12 +8,36 @@
  * - step 3: collect info and set them into t_cmd data structure.
  *
  * @line: string - contains command line
- * @cmd: t_cmd - data structure for storing command info
+ * @cmd_l: t_cmd - data structure for storing command info
  * Return: int - indicating status of parse 0 no error, otherwise -1.
  */
-int parse(char *line, t_cmd **cmd)
+int parse(char *line, t_cmd **cmd_l)
 {
-	/* code here */
+	t_list *cur, *p_cmds = NULL, *p_cmd;
+	char *tok, t;
+
+	*cmd_l = NULL;
+	/* Parse commands by ';', '||' and '&&' */
+	tok = _strtok(line, "|;&");
+	do
+		p_cmds = add_elem(&p_cmds, tok);
+	while ((tok = _strtok(NULL, "|;&")));
+	cur = p_cmds;
+	/* Parse sub commands by space*/
+	while (cur)
+	{
+		p_cmd = NULL;
+		t = cur->next ? cur->val[_strlen(cur->val) + 1] : '\0';
+		tok = _strtok(cur->val, " ");
+		do
+			p_cmd = add_elem(&p_cmd, tok);
+		while ((tok = _strtok(NULL, " ")));
+		*cmd_l = add_cmd(cmd_l, list_to_arr(p_cmd), t);
+		free_list(p_cmd);
+		cur = cur->next;
+	}
+	free_list(p_cmds);
+	return (0);
 }
 
 /**
@@ -26,51 +50,16 @@ int parse(char *line, t_cmd **cmd)
 char *_strtok(char *str, const char *delim)
 {
 	static char *token, *next;
-
-	if (str != NULL)
-	{
-		token = str;
-		next = str;
-	}
-
-	if (next == NULL || *token == '\0')
-		return (NULL);
-
-	token = next;
-	next = _strpbrk(next, delim);
-
-	if (next != NULL)
-	{
-		*next = '\0';
-		next++;
-	}
-
-	return (token);
-}
-
-/**
- * _strpbrk - locates the first occurrence in the string s of any
- * of the bytes in the string accept.
- * @s: input
- * @accept: input
- * Return: pointer to the byte in s that matches one of the bytes in accept,
- * or NULL if no such byte is found.
- */
-char *_strpbrk(char *s, const char *accept)
-{
 	int i;
 
-	while (*s != '\0')
-	{
-		for (i = 0; accept[i] != '\0'; i++)
-		{
-			if (*s == accept[i])
-			{
-				return (s);
-			}
-		}
-		s++;
-	}
-
-	return (NULL);
+	next = ltrim(str != NULL ? str : next, (char *)delim);
+	if (next == NULL || *next == '\0')
+		return (NULL);
+	token = next;
+	for (i = 0; token[i]; i++)
+		if (_index(delim, token[i]) != -1)
+			break;
+	next += i + (token[i] != '\0');
+	token[i] = '\0';
+	return (token);
 }
