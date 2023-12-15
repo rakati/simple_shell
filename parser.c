@@ -8,12 +8,36 @@
  * - step 3: collect info and set them into t_cmd data structure.
  *
  * @line: string - contains command line
- * @cmd: t_cmd - data structure for storing command info
+ * @cmd_l: t_cmd - data structure for storing command info
  * Return: int - indicating status of parse 0 no error, otherwise -1.
  */
-int parse(char *line, t_cmd **cmd)
+int parse(char *line, t_cmd **cmd_l)
 {
-	/* code here */
+	t_list *cur, *p_cmds = NULL, *p_cmd;
+	char *tok, t;
+
+	*cmd_l = NULL;
+	/* Parse commands by ';', '||' and '&&' */
+	tok = _strtok(line, "|;&");
+	do
+		p_cmds = add_elem(&p_cmds, tok);
+	while ((tok = _strtok(NULL, "|;&")));
+	cur = p_cmds;
+	/* Parse sub commands by space*/
+	while (cur)
+	{
+		p_cmd = NULL;
+		t = cur->next ? cur->val[_strlen(cur->val) + 1] : '\0';
+		tok = _strtok(cur->val, " ");
+		do
+			p_cmd = add_elem(&p_cmd, tok);
+		while ((tok = _strtok(NULL, " ")));
+		*cmd_l = add_cmd(cmd_l, list_to_arr(p_cmd), t);
+		free_list(p_cmd);
+		cur = cur->next;
+	}
+	free_list(p_cmds);
+	return (0);
 }
 
 /**
