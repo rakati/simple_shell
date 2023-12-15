@@ -142,6 +142,7 @@ void print_pair_list(t_pair *head);
 t_pair *add_pair_node(t_pair *head, char *key, char *value, int is_alias);
 t_pair *remove_pair_node(t_pair *head, char *key, int is_alias);
 t_pair *initialize_pair_list(char *envp[]);
+t_pair *initialize_aliases(char *aliases[]);
 void free_pair_list(t_pair *head);
 
 #endif
