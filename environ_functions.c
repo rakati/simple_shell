@@ -1,7 +1,7 @@
 #include "shell.h"
 
 /**
- * print_list - Prints the key-value pairs of the linked list.
+ * print_pair_list - Prints the key-value pairs of the linked list.
  * @head: The head of the linked list.
  */
 
@@ -86,7 +86,8 @@ t_pair *add_pair_node(t_pair *head, char *key, char *value, int is_alias)
 }
 
 /**
- * remove_pair_node - Removes a pair node with the specified key from the linked list.
+ * remove_pair_node - Removes a pair node with the specified key from
+ * the linked list.
  * @head: The head of the linked list.
  * @key: The key of the node to be removed.
  * @is_alias: Flag indicating whether it's an is_alias (1) or
