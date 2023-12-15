@@ -11,7 +11,7 @@
 char **convert_to_array(t_pair *list)
 {
 	int count = 0;
-	int i = 0;
+	int j, i = 0;
 	char **result;
 	t_pair *current = list;
 
@@ -31,6 +31,8 @@ char **convert_to_array(t_pair *list)
 		result[i] = malloc(_strlen(current->key) + _strlen(curent->value) + 2);
 		if (result[i] == NULL)
 		{
+			for (j = 0; result[j] != NULL, j++)
+				free(result[j]);
 			free(result);
 			return (NULL);
 		}
