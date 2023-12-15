@@ -82,6 +82,8 @@ typedef struct cmd_s
  * execute functions
  */
 
+int sys_execute(char **cmd, t_pair *env);
+
 /*
  * Implemented Builtin functions
  */
