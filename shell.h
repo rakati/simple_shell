@@ -122,8 +122,8 @@ typedef struct s_pair
 } t_pair;
 
 void print_list(t_pair *head);
-t_pair *add_Node(t_pair *head, char *key, char *value, int is_alias);
-t_pair *remove_Node(t_pair *head, char *key, int is_alias);
+t_pair *add_pair_node(t_pair *head, char *key, char *value, int is_alias);
+t_pair *remove_pair_node(t_pair *head, char *key, int is_alias);
 t_pair *initialize_list(char *envp[]);
 void free_list(t_pair *head);
 
