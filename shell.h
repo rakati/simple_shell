@@ -7,6 +7,10 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <sys/wait.h>
+#include <stdio.h>
+
+extern int errno;
 
 /*
  * String Utility functions
@@ -107,10 +111,6 @@ void print_list(t_list *head);
 void free_list(t_list *head);
 
 /*
- * execute functions
- */
-
-/*
  * Implemented Builtin functions
  */
 
@@ -140,5 +140,11 @@ t_pair *add_pair_node(t_pair *head, char *key, char *value, int is_alias);
 t_pair *remove_pair_node(t_pair *head, char *key, int is_alias);
 t_pair *initialize_pair_list(char *envp[]);
 void free_pair_list(t_pair *head);
+
+/*
+ * execute functions
+ */
+
+int _execute(t_cmd *cmd_l, char **env, char *prog);
 
 #endif
