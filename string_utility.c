@@ -60,6 +60,27 @@ int _strcmp(char *s1, char *s2)
 }
 
 /**
+ * ltrim - left trim or skip characters in to_skip str and return pointer
+ * to the firs character not in to_skip str.
+ *
+ * @s: string - to trim
+ * @to_skip: whitespace characters or any characters to skip.
+ *
+ * Return: A pointer to the first character in s not in to_skip str, or NULL.
+ */
+char *ltrim(char *s, char *to_skip)
+{
+	int i;
+
+	if (s == NULL)
+		return (NULL);
+	for (i = 0; s[i]; i++)
+		if (_index(to_skip, s[i]) == -1)
+			return (s + i);
+	return (NULL);
+}
+
+/**
  * _strncpy - copies at most n bytes from the string pointed to by src,
  * including the terminating null byte, to the buffer pointed to by dest.
  *

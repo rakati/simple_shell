@@ -6,21 +6,20 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <errno.h>
 
 /*
  * String Utility functions
  */
 
-int _strlen(char *);
-void _puts(char *);
-int _getline(const int fd, char **line);
-static int process_line(char **line, char **rd, int pos);
+int _strlen(const char *);
+int _puts(char *);
+int _getline(char **line, const int fd);
 int _strcmp(char *, char *);
 char *_strncpy(char *, const char *, size_t);
 char *_strdup(const char *);
 char *_strcat(char *, char *);
+char *ltrim(char *s, char *to_skip);
 
 /*
  * General Utility functions
@@ -30,29 +29,28 @@ int _index(const char *, const char);
 void *_realloc(void *, size_t);
 
 /*
- * Parser functions
+ * -----------------------------------------------------------------------
+ * Parser Declarations
+ * -----------------------------------------------------------------------
  */
-
-char *_strpbrk(char *s, const char *accept);
-char *_strtok(char *str, const char *delim);
 
 /**
  * enum rel - enum for type of relation between commands in a single line
  * @OR: indicating relation with next command is '||' operator.
  * @AND: indicating relation with next command is '&&' operator.
- * @SEM: indicating relation with next command is ';' operator.
- * @END: means no command after current command.
+ * @SEM: indicating relation with next command is ';' or end operator,
+ * note that the next command can be empty or NULL, so make sure to check
+ * next elem.
  */
 enum rel
 {
 	OR,
 	AND,
-	SEM,
-	END
+	SEM
 };
 
 /**
- * struct cmd_s - singly linked list of commands
+ * struct s_cmd - singly linked list of commands
  * @cmd: NULL terminated array of strings - hold the cmd in index 0, and it's
  * arguments starting from index 1.
  * @type: enum rel - indicate the relationship between commands if there are
@@ -70,12 +68,43 @@ enum rel
  * => {cmd=["/bin/ls"], type=SEM, next=ptr_next}
  *		=> {cmd=["/bin/cat", "file_name"], type=END, next=NULL};
  */
-typedef struct cmd_s
+typedef struct s_cmd
 {
 	char **cmd;
 	enum rel type;
-	struct cmd_s *next;
+	struct s_cmd *next;
 } t_cmd;
+
+char *_strtok(char *str, const char *delim);
+
+t_cmd *add_cmd(t_cmd **head, char **cmd, char type);
+void free_2d_arr(char **cmd);
+void print_cmd_list(t_cmd *head);
+void free_cmd_list(t_cmd *head);
+int parse(char *line, t_cmd **cmd_l);
+
+/*
+ * -----------------------------------------------------------------------
+ * Linked list functions and data type
+ * -----------------------------------------------------------------------
+ */
+
+/**
+ * struct s_list - simple linked list of strings
+ *
+ * @val: string
+ * @next: pointer to the next node
+ */
+typedef struct s_list
+{
+	char *val;
+	struct s_list *next;
+} t_list;
+
+t_list *add_elem(t_list **head, char *val);
+char **list_to_arr(t_list *head);
+void print_list(t_list *head);
+void free_list(t_list *head);
 
 /*
  * execute functions
@@ -106,10 +135,10 @@ typedef struct s_pair
 	int is_alias;
 } t_pair;
 
-void print_list(t_pair *head);
-t_pair *add_Node(t_pair *head, char *key, char *value, int is_alias);
-t_pair *remove_Node(t_pair *head, char *key, int is_alias);
-t_pair *initialize_list(char *envp[]);
-void free_list(t_pair *head);
+void print_pair_list(t_pair *head);
+t_pair *add_pair_node(t_pair *head, char *key, char *value, int is_alias);
+t_pair *remove_pair_node(t_pair *head, char *key, int is_alias);
+t_pair *initialize_pair_list(char *envp[]);
+void free_pair_list(t_pair *head);
 
 #endif
