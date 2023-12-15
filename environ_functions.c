@@ -51,14 +51,14 @@ t_pair *add_pair_node(t_pair *head, char *key, char *value, int is_alias)
 	new = malloc(sizeof(t_pair));
 	if (new == NULL)
 	{
-		perror("Error: Memory allocation failed");
+		write(STDERR_FILENO, "Error: Memory allocation failed", 32);
 		return (NULL);
 	}
 
 	new->key = _strdup(key);
 	if (new->key == NULL)
 	{
-		perror("Error: Memory allocation failed");
+		write(STDERR_FILENO, "Error: Memory allocation failed", 32);
 		free(new);
 		return (NULL);
 	}
@@ -66,7 +66,7 @@ t_pair *add_pair_node(t_pair *head, char *key, char *value, int is_alias)
 	new->value = _strdup(value);
 	if (new->value == NULL)
 	{
-		perror("Error: Memory allocation failed");
+		write(STDERR_FILENO, "Error: Memory allocation failed", 32);
 		free(new->key);
 		free(new);
 		return (NULL);
