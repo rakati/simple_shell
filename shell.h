@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <errno.h>
 
 /*
@@ -29,7 +28,8 @@ char *ltrim(char *s, char *to_skip);
 int _index(const char *, const char);
 void *_realloc(void *, size_t);
 
-/* -----------------------------------------------------------------------
+/*
+ * -----------------------------------------------------------------------
  * Parser Declarations
  * -----------------------------------------------------------------------
  */
@@ -38,19 +38,19 @@ void *_realloc(void *, size_t);
  * enum rel - enum for type of relation between commands in a single line
  * @OR: indicating relation with next command is '||' operator.
  * @AND: indicating relation with next command is '&&' operator.
- * @SEM: indicating relation with next command is ';' operator.
- * @END: means no command after current command.
+ * @SEM: indicating relation with next command is ';' or end operator,
+ * note that the next command can be empty or NULL, so make sure to check
+ * next elem.
  */
 enum rel
 {
 	OR,
 	AND,
-	SEM,
-	END
+	SEM
 };
 
 /**
- * struct cmd_s - singly linked list of commands
+ * struct s_cmd - singly linked list of commands
  * @cmd: NULL terminated array of strings - hold the cmd in index 0, and it's
  * arguments starting from index 1.
  * @type: enum rel - indicate the relationship between commands if there are
@@ -76,13 +76,25 @@ typedef struct s_cmd
 } t_cmd;
 
 char *_strtok(char *str, const char *delim);
-t_cmd *add_cmd(t_cmd *head, char **cmd, enum rel type);
 
-/* -----------------------------------------------------------------------
+t_cmd *add_cmd(t_cmd **head, char **cmd, char type);
+void free_2d_arr(char **cmd);
+void print_cmd_list(t_cmd *head);
+void free_cmd_list(t_cmd *head);
+int parse(char *line, t_cmd **cmd_l);
+
+/*
+ * -----------------------------------------------------------------------
  * Linked list functions and data type
  * -----------------------------------------------------------------------
  */
 
+/**
+ * struct s_list - simple linked list of strings
+ *
+ * @val: string
+ * @next: pointer to the next node
+ */
 typedef struct s_list
 {
 	char *val;
@@ -91,6 +103,8 @@ typedef struct s_list
 
 t_list *add_elem(t_list **head, char *val);
 char **list_to_arr(t_list *head);
+void print_list(t_list *head);
+void free_list(t_list *head);
 
 /*
  * execute functions
