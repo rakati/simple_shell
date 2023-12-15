@@ -51,8 +51,10 @@ int _execute(t_cmd *cmd_l, char **env, char *prog)
 		/* status = _unsetenv(cmd_l->cmd, env); */
 		/* else if (_strcmp(cmd_l->cmd[0], "cd") == 0) */
 		/* status = _cd(cmd_l->cmd, env); */
-
-		st = sys_execute(cmd_l->cmd, env, prog);
+		if (cmd_l->cmd[0])
+		{
+			st = sys_execute(cmd_l->cmd, env, prog);
+		}
 		/* if (status != 0 && cmd_l->type == AND) */
 		cmd_l = cmd_l->next;
 	}
