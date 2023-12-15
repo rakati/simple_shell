@@ -5,7 +5,7 @@
  * @head: The head of the linked list.
  */
 
-void print_list(t_pair *head)
+void print_pair_list(t_pair *head)
 {
 	t_pair *current;
 
@@ -128,7 +128,7 @@ t_pair *remove_pair_node(t_pair *head, char *key, int is_alias)
  * Return: The head of the initialized linked list.
  */
 
-t_pair *initialize_list(char *envp[])
+t_pair *initialize_pair_list(char *envp[])
 {
 	t_pair *head = NULL;
 	int i = 0;
