@@ -12,15 +12,25 @@
 int main(int ac, char **av, char **envp)
 {
 	char *line;
+	t_cmd *info;
+	/* t_pair *env; */
 	int fd;
-	int r;
+	int r, st;
 
 	fd = (ac != 1 ? open(av[1], O_RDONLY) : STDIN_FILENO);
+	/* env = initialize_pair_list(envp); */
 	while (1)
 	{
 		_puts("$ ");
-		r = _getline(fd, &line);
-		/* check _getline */
+		r = _getline(&line, fd);
+		if (r < 0)
+		{
+			perror(av[0]);
+			continue;
+		}
+		parse(line, &info);
+		st = _execute(info, envp, av[0]);
+		free(line);
 	}
-	return (0);
+	return (st);
 }
