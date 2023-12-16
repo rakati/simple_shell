@@ -113,6 +113,7 @@ void free_list(t_list *head);
 /*
  * Implemented Builtin functions
  */
+int ft_echo(char **cmd);
 
 /*
  * the linked list node and functions for environment variables.

@@ -51,10 +51,12 @@ int _execute(t_cmd *cmd_l, char **env, char *prog)
 		/* status = _unsetenv(cmd_l->cmd, env); */
 		/* else if (_strcmp(cmd_l->cmd[0], "cd") == 0) */
 		/* status = _cd(cmd_l->cmd, env); */
-		if (cmd_l->cmd[0])
-		{
+		if (!cmd_l->cmd[0])
+			st = 0;
+		else if (_strcmp(cmd_l->cmd[0], "echo") == 0)
+			st = ft_echo(cmd_l->cmd);
+		else
 			st = sys_execute(cmd_l->cmd, env, prog);
-		}
 		/* if (status != 0 && cmd_l->type == AND) */
 		cmd_l = cmd_l->next;
 	}
