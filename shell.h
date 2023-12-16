@@ -28,6 +28,7 @@ char *ltrim(char *s, char *to_skip);
 
 int _index(const char *, const char);
 void *_realloc(void *, size_t);
+char *look_in_path(char *str);
 
 /*
  * -----------------------------------------------------------------------
