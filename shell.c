@@ -11,8 +11,8 @@
  */
 int main(int ac, char **av, char **envp)
 {
-	char *line;
-	t_cmd *info;
+	char *line = NULL;
+	t_cmd *info = NULL;
 	/* t_pair *env; */
 	int fd;
 	int r, st;
@@ -23,7 +23,12 @@ int main(int ac, char **av, char **envp)
 	{
 		_puts("$ ");
 		r = _getline(&line, fd);
-		if (r < 0)
+		if (r == -2)
+		{
+			_puts("\n");
+			return (0);
+		}
+		if (r == -1)
 		{
 			perror(av[0]);
 			continue;
@@ -31,6 +36,7 @@ int main(int ac, char **av, char **envp)
 		parse(line, &info);
 		st = _execute(info, envp, av[0]);
 		free(line);
+		free_cmd_list(info);
 	}
 	return (st);
 }
