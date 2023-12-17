@@ -64,13 +64,13 @@ void print_cmd_list(t_cmd *head)
 
 	while (head)
 	{
-		_puts("cmd:");
+		_puts("cmd:|");
 		for (i = 0; head->cmd[i]; i++)
 		{
 			_puts(head->cmd[i]);
 			_puts(", ");
 		}
-		_puts("\n");
+		_puts("|\n");
 		head = head->next;
 	}
 	_puts("\n");
