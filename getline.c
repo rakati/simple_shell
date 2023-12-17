@@ -69,9 +69,9 @@ int _getline(char **line, const int fd)
 		if (pos >= 0 || r < BUFF_SIZE)
 			break;
 	}
-	if (r != -1)
-		return (process_line(line, &rd, pos >= 0 ? pos : _strlen(rd)) + 1);
+	if (r != -1 && pos >= 0)
+		return (process_line(line, &rd, pos) + 1);
 	if (rd != NULL)
 		free(rd);
-	return (-1);
+	return (r < 0 ? -1 : -2);
 }
