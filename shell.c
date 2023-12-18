@@ -14,24 +14,24 @@ int main(int ac, char **av, char **envp)
 	char *line = NULL;
 	t_cmd *info = NULL;
 	/* t_pair *env; */
-	int fd;
-	int r, st;
+	int fd, interactive, st;
 
 	fd = (ac != 1 ? open(av[1], O_RDONLY) : STDIN_FILENO);
 	/* env = initialize_pair_list(envp); */
+	interactive = isatty(STDIN_FILENO);
 	while (1)
 	{
-		_puts("$ ");
-		r = _getline(&line, fd);
-		if (r == -2)
-		{
-			_puts("\n");
-			return (0);
-		}
-		if (r == -1)
+		if (interactive)
+			_puts("$ ");
+		if ((st = _getline(&line, fd)) < 0)
 		{
 			perror(av[0]);
 			continue;
+		}
+		if (st != _strlen(line) + 1)
+		{
+			free(line);
+			break;
 		}
 		parse(line, &info);
 		st = _execute(info, envp, av[0]);
