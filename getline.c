@@ -1,42 +1,6 @@
 #include "shell.h"
 
 /**
- * process_line - Process a line from the existing content and
- * update the pointers.
- * @line: A pointer to a char pointer where the resulting line will be stored.
- * @rd: A pointer to a char pointer representing existing content.
- * @pos: The position of the newline character in the existing content.
- *
- * Return: line length or negative number represent error code
- */
-static int process_line(char **line, char **rd, int pos)
-{
-	char *tmp;
-
-	if (pos < 0)
-		return (-1);
-	*line = malloc(pos + 1);
-	if (*line == NULL)
-		return (-2);
-	*line = _strncpy(*line, *rd, pos);
-	if (*line == NULL)
-		return (-2);
-	(*line)[pos] = '\0';
-	if ((*rd)[pos + 1] == '\0')
-	{
-		free(*rd);
-		*rd = NULL;
-		return (pos);
-	}
-	tmp = *rd;
-	*rd = _strdup(*rd + pos + 1);
-	if (*rd == NULL)
-		return (-2);
-	free(tmp);
-	return (pos);
-}
-
-/**
  * _getline - read a line from a file descriptor and allocate memory for it.
  * @fd: the file descriptor from which to read the line.
  * @line: a pointer to a char pointer where the resulting line will be stored.
@@ -50,28 +14,31 @@ static int process_line(char **line, char **rd, int pos)
  */
 int _getline(char **line, const int fd)
 {
-	static char *rd;
-	char buff[BUFF_SIZE];
-	int pos, r;
+	static char buff[BUFF_SIZE + 1] = {0};
+	int n, r, l;
 
+	if (line == NULL)
+		return (-1);
 	*line = NULL;
-	pos = _index(rd, '\n');
-	if (pos >= 0)
-		return (process_line(line, &rd, pos) + 1);
-	while ((r = read(fd, buff, BUFF_SIZE)) > 0)
+	n = _index(buff, '\n');
+	l = (n != -1 ? n : _strlen(buff));
+	if (n != -1)
+		buff[n] = '\0';
+	*line = _strndup(buff, l);
+	while ((n == -1) && (r = read(fd, buff, BUFF_SIZE)) > 0)
 	{
 		buff[r] = '\0';
-		if (rd == NULL)
-			rd = _strdup(buff);
-		else
-			rd = _strcat(_realloc(rd, _strlen(rd) + r + 1), buff);
-		pos = _index(rd, '\n');
-		if (pos >= 0 || r < BUFF_SIZE)
+		n = _index(buff, '\n');
+		l += (n != -1) ? n : r;
+		if (n != -1)
+			buff[n] = '\0';
+		*line = _realloc(*line, l + 1);
+		*line = _strcat(*line + l - (n != -1 ? n : r), buff);
+		if (r < BUFF_SIZE)
 			break;
 	}
-	if (r != -1 && pos >= 0)
-		return (process_line(line, &rd, pos) + 1);
-	if (rd != NULL)
-		free(rd);
-	return (r < 0 ? -1 : -2);
+	if (r < 0)
+		return (-1);
+	_strncpy(buff, buff + (n != -1 ? n + 1 : BUFF_SIZE), BUFF_SIZE + 1);
+	return (l + (n != -1));
 }
