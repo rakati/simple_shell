@@ -1,7 +1,7 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#define BUFF_SIZE 1024
+#define BUFF_SIZE 256
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -22,6 +22,7 @@ int _getline(char **line, const int fd);
 int _strcmp(char *, char *);
 char *_strncpy(char *, const char *, size_t);
 char *_strdup(const char *);
+char *_strndup(const char *str, size_t len);
 char *_strcat(char *, char *);
 char *ltrim(char *s, char *to_skip);
 

@@ -29,6 +29,31 @@ char *_strdup(const char *str)
 }
 
 /**
+ * _strndup - Copy up to n bytes from source string into new memory
+ * @str: string to copy from.
+ * @len: Number of characters to copy
+ * Return: returns a pointer to a memory copy.
+ */
+char *_strndup(const char *str, size_t len)
+{
+	size_t i;
+	char *newstr;
+
+	if (str == NULL)
+		return (NULL);
+
+	newstr = malloc(len * sizeof(char) + 1);
+	if (newstr == NULL)
+		return (NULL);
+
+	for (i = 0; i < len && str[i]; i++)
+		newstr[i] = str[i];
+
+	newstr[i] = '\0';
+	return (newstr);
+}
+
+/**
  * _strcat - concatenates two strings
  * @dest: input value
  * @src: input value
