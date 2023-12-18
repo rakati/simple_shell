@@ -23,7 +23,8 @@ int main(int ac, char **av, char **envp)
 	{
 		if (interactive)
 			_puts("$ ");
-		if ((st = _getline(&line, fd)) < 0)
+		st = _getline(&line, fd);
+		if (st < 0)
 		{
 			perror(av[0]);
 			continue;
