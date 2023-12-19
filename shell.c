@@ -21,7 +21,7 @@ int main(int ac, char **av, char **envp)
 	interactive = isatty(STDIN_FILENO);
 	while (1)
 	{
-		if (interactive)
+		if (fd < 3 && interactive)
 			_puts("$ ");
 		st = _getline(&line, fd);
 		if (st < 0)
@@ -31,13 +31,15 @@ int main(int ac, char **av, char **envp)
 		}
 		if (st != _strlen(line) + 1)
 		{
-			free(line);
+			if (line != NULL)
+				free(line);
 			break;
 		}
 		parse(line, &info);
 		st = _execute(info, envp, av[0]);
-		free(line);
+		if (line != NULL)
+			free(line);
 		free_cmd_list(info);
 	}
-	return (st);
+	return (st > 0 ? 0 : st);
 }
