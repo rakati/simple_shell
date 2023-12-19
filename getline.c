@@ -33,7 +33,7 @@ int _getline(char **line, const int fd)
 		if (n != -1)
 			buff[n] = '\0';
 		*line = _realloc(*line, l + 1);
-		*line = _strcat(*line + l - (n != -1 ? n : r), buff);
+		_strcat(*line + l - (n != -1 ? n : r), buff);
 		if (r < BUFF_SIZE)
 			break;
 	}
