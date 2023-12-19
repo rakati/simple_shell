@@ -55,11 +55,12 @@ int _execute(t_cmd *cmd_l, char **env, char *prog)
 			st = 0;
 		else if (_strcmp(cmd_l->cmd[0], "echo") == 0)
 			st = ft_echo(cmd_l->cmd);
+		else if (_strcmp(cmd_l->cmd[0], "exit") == 0)
+			st = ft_exit(cmd_l);
 		else
 			st = sys_execute(cmd_l->cmd, env, prog);
 		/* if (status != 0 && cmd_l->type == AND) */
 		cmd_l = cmd_l->next;
 	}
-
-	return (st != 0 ? -1 : st);
+	return (st);
 }
