@@ -22,3 +22,32 @@ int ft_echo(char **cmd)
 		return (-1);
 	return (0);
 }
+
+/**
+ * ft_exit - free memory allocated and exit with status from the shell.
+ * @cmd: data structure contain command and it's arguments
+ * Return: return error number only on error otherwise exit with status.
+ */
+
+int ft_exit(t_cmd *cmd)
+{
+	int i, st = 0;
+
+	if (cmd->cmd[1])
+	{
+		for (i = 0; cmd->cmd[1][i]; i++)
+		{
+			if (cmd->cmd[1][i] < '0' || cmd->cmd[1][i] > '9')
+			{
+				write(2, "exit: Illegal number: ", 23);
+				write(2, cmd->cmd[1], _strlen(cmd->cmd[1]));
+				write(2, "\n", 1);
+				return (2);
+			}
+			st = (st * 10) + (cmd->cmd[1][i] - '0');
+		}
+	}
+	free_cmd_list(cmd);
+	exit(st);
+	return (0);
+}
