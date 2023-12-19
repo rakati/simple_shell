@@ -32,6 +32,7 @@ char *ltrim(char *s, char *to_skip);
 
 int _index(const char *, const char);
 void *_realloc(void *, size_t);
+void _put_nbr(int n, int fd);
 
 /*
  * -----------------------------------------------------------------------
@@ -86,7 +87,8 @@ t_cmd *add_cmd(t_cmd **head, char **cmd, char type);
 void free_2d_arr(char **cmd);
 void print_cmd_list(t_cmd *head);
 void free_cmd_list(t_cmd *head);
-int parse(char *line, t_cmd **cmd_l);
+int syntax_analysis(char *line, char *prog);
+int parse(char *line, t_cmd **cmd_l, char *prog);
 
 /*
  * -----------------------------------------------------------------------
@@ -114,7 +116,7 @@ void free_list(t_list *head);
 /*
  * Implemented Builtin functions
  */
-int ft_echo(char **cmd);
+int ft_echo(char **cmd, int st);
 int ft_exit(t_cmd *cmd);
 
 /*
@@ -148,6 +150,6 @@ void free_pair_list(t_pair *head);
  * execute functions
  */
 
-int _execute(t_cmd *cmd_l, char **env, char *prog);
+int _execute(t_cmd *cmd_l, char **env, char *prog, int st);
 
 #endif

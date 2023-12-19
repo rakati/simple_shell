@@ -14,13 +14,14 @@ int main(int ac, char **av, char **envp)
 	char *line = NULL;
 	t_cmd *info = NULL;
 	/* t_pair *env; */
-	int fd, interactive, st;
+	int fd, interactive, st = 0, prev_st;
 
 	fd = (ac != 1 ? open(av[1], O_RDONLY) : STDIN_FILENO);
 	/* env = initialize_pair_list(envp); */
 	interactive = isatty(STDIN_FILENO);
 	while (1)
 	{
+		prev_st = st;
 		if (fd < 3 && interactive)
 			_puts("$ ");
 		st = _getline(&line, fd);
@@ -35,11 +36,12 @@ int main(int ac, char **av, char **envp)
 				free(line);
 			break;
 		}
-		parse(line, &info);
+		st = parse(line, &info, av[0]);
 		if (line != NULL)
 			free(line);
-		st = _execute(info, envp, av[0]);
+		if (st == 0)
+			st = _execute(info, envp, av[0], prev_st);
 		free_cmd_list(info);
 	}
-	return (st > 0 ? 0 : st);
+	return (st > 0 ? st : 0);
 }
