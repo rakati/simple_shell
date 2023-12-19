@@ -15,7 +15,7 @@
 int _getline(char **line, const int fd)
 {
 	static char buff[BUFF_SIZE + 1] = {0};
-	int n, r, l;
+	int n, r = 0, l;
 
 	if (line == NULL)
 		return (-1);
