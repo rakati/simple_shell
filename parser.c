@@ -74,6 +74,7 @@ char *_strtok(char *str, const char *delim)
 /**
  * syntax_analysis - do basic syntax analysis
  * @line: a line of command
+ * @prog: program name to display in errors
  *
  * Return: -1 empty command, 0 on check passed, otherwise a positive
  * error number

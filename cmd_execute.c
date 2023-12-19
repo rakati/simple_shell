@@ -39,6 +39,7 @@ static int sys_execute(char **cmd, char **env, char *prog)
 int _execute(t_cmd *cmd_l, char **env, char *prog, int status)
 {
 	int st = 0;
+
 	while (cmd_l != NULL)
 	{
 		/* if (_strcmp(cmd_l->cmd[0], "alias") == 0) */
