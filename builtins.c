@@ -3,10 +3,11 @@
 /**
  * ft_echo - mimic echo command.
  * @cmd: array of string - contains command and its args
+ * @st: status of last execution
  * Return: int - 0 on success, otherwise -1.
  */
 
-int ft_echo(char **cmd)
+int ft_echo(char **cmd, int st)
 {
 	int i;
 
@@ -15,7 +16,9 @@ int ft_echo(char **cmd)
 		if (i > 1)
 			if (_puts(" ") < 0)
 				return (-1);
-		if (_puts(cmd[i]) < 0)
+		if (cmd[i][0] == '$')
+			_put_nbr(cmd[i][1] == '$' ? getpid() : st, 1);
+		else if (_puts(cmd[i]) < 0)
 			return (-1);
 	}
 	if (_puts("\n") < 0)
