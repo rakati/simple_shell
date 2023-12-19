@@ -9,16 +9,23 @@
  *
  * @line: string - contains command line
  * @cmd_l: t_cmd - data structure for storing command info
+ * @prog: program name to display in errors.
  * Return: int - indicating status of parse 0 no error, otherwise -1.
  */
-int parse(char *line, t_cmd **cmd_l)
+int parse(char *line, t_cmd **cmd_l, char *prog)
 {
 	t_list *cur, *p_cmds = NULL, *p_cmd;
 	char *tok, t;
+	int st = 0;
 
 	*cmd_l = NULL;
+	/* basic syntax analysis*/
+	st = syntax_analysis(line, prog);
+	if (st != 0)
+		return (st);
+	tok = _strtok(line, "#");
 	/* Parse commands by ';', '||' and '&&' */
-	tok = _strtok(line, "|;&");
+	tok = _strtok(tok, "|;&");
 	do
 		p_cmds = add_elem(&p_cmds, tok);
 	while ((tok = _strtok(NULL, "|;&")));
@@ -37,7 +44,7 @@ int parse(char *line, t_cmd **cmd_l)
 		cur = cur->next;
 	}
 	free_list(p_cmds);
-	return (0);
+	return (st);
 }
 
 /**
@@ -52,7 +59,7 @@ char *_strtok(char *str, const char *delim)
 	static char *token, *next;
 	int i;
 
-	next = ltrim(str != NULL ? str : next, (char *)delim);
+	next = ltrim(str == NULL ? next : str, (char *)delim);
 	if (next == NULL || *next == '\0')
 		return (NULL);
 	token = next;
@@ -62,4 +69,27 @@ char *_strtok(char *str, const char *delim)
 	next += i + (token[i] != '\0');
 	token[i] = '\0';
 	return (token);
+}
+
+/**
+ * syntax_analysis - do basic syntax analysis
+ * @line: a line of command
+ *
+ * Return: -1 empty command, 0 on check passed, otherwise a positive
+ * error number
+ */
+int syntax_analysis(char *line, char *prog)
+{
+	int st = 0;
+
+	/* do nothing */
+	if (line == NULL || *line == '#')
+		st = -1;
+	else if (_index("|&", *line) != -1)
+	{
+		write(STDERR_FILENO, prog, _strlen(prog));
+		write(STDERR_FILENO, ": Syntax error", 15);
+		st = 2;
+	}
+	return (st);
 }
