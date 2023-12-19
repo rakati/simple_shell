@@ -41,3 +41,18 @@ void *_realloc(void *ptr, size_t size)
 	free(ptr);
 	return (new_ptr);
 }
+
+/**
+ * _put_nbr - print a number to the given file descriptor.
+ * @n: number to print
+ * @fd: output file descriptor
+ */
+void _put_nbr(int n, int fd)
+{
+	char c;
+
+	if (n > 9)
+		_put_nbr(n / 10, fd);
+	c = n % 10 + '0';
+	write(fd, &c, 1);
+}
