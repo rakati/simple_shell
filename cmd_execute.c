@@ -33,12 +33,12 @@ static int sys_execute(char **cmd, char **env, char *prog)
  * @cmd_l: cmd data structure info.
  * @env: A 2d array of t_pair representing the environment variables.
  * @prog: program name
+ * @status: status of last execution
  * Return: The exit status of the executed command or -1 on failure.
  */
-int _execute(t_cmd *cmd_l, char **env, char *prog)
+int _execute(t_cmd *cmd_l, char **env, char *prog, int status)
 {
 	int st = 0;
-
 	while (cmd_l != NULL)
 	{
 		/* if (_strcmp(cmd_l->cmd[0], "alias") == 0) */
@@ -54,7 +54,7 @@ int _execute(t_cmd *cmd_l, char **env, char *prog)
 		if (!cmd_l->cmd[0])
 			st = 0;
 		else if (_strcmp(cmd_l->cmd[0], "echo") == 0)
-			st = ft_echo(cmd_l->cmd);
+			st = ft_echo(cmd_l->cmd, status);
 		else if (_strcmp(cmd_l->cmd[0], "exit") == 0)
 			st = ft_exit(cmd_l);
 		else
