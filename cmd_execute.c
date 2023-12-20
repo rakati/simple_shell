@@ -60,9 +60,12 @@ int _execute(t_cmd *cmd_l, char **env, char *prog, int status)
 			st = ft_exit(cmd_l, status);
 		else
 			st = sys_execute(cmd_l->cmd, env, prog);
-		/* if (status != 0 && cmd_l->type == AND) */
+		if (st != 0 && cmd_l->type == AND)
+			break;
+		else if (st == 0 && cmd_l->type == OR)
+			break;
 		cmd_l = cmd_l->next;
 		status = st;
 	}
-	return (st);
+	return (st > 255 ? 2 : st);
 }
