@@ -29,15 +29,17 @@ int ft_echo(char **cmd, int st)
 /**
  * ft_exit - free memory allocated and exit with status from the shell.
  * @cmd: data structure contain command and it's arguments
+ * @st: status of last command
  * Return: return error number only on error otherwise exit with status.
  */
 
-int ft_exit(t_cmd *cmd)
+int ft_exit(t_cmd *cmd, int st)
 {
-	int i, st = 0;
+	int i;
 
 	if (cmd->cmd[1])
 	{
+		st = 0;
 		for (i = 0; cmd->cmd[1][i]; i++)
 		{
 			if (cmd->cmd[1][i] < '0' || cmd->cmd[1][i] > '9')
@@ -51,6 +53,6 @@ int ft_exit(t_cmd *cmd)
 		}
 	}
 	free_cmd_list(cmd);
-	exit(st);
+	exit(st > 255 ? 2 : st);
 	return (0);
 }
