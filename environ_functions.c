@@ -1,168 +1,126 @@
 #include "shell.h"
 
 /**
- * print_pair_list - Prints the key-value pairs of the linked list.
- * @head: The head of the linked list.
+ * get_new_2d_arr - copy 2d char array and add val string to the array
+ * if it isn't null.
+ * @arr: a 2d array of char.
+ * @val: simple string to add or null
+ * Return: new allocated copy of a 2d char array with val added
+ * if it isn't null.
  */
 
-void print_pair_list(t_pair *head)
+char **get_new_2d_arr(char **arr, char *val)
 {
-	t_pair *current;
+	char **new;
+	int i;
 
-	current = head;
-
-	while (current != NULL)
-	{
-		if (current->is_alias)
-		{
-			_puts(current->key);
-			write(1, "='", 2);
-			_puts(current->value);
-			write(1, "'\n", 2);
-		}
-		else
-		{
-			_puts(current->key);
-			write(1, "=", 1);
-			_puts(current->value);
-			write(1, "\n", 1);
-		}
-
-		current = current->next;
-	}
+	for (i = 0; arr[i]; i++)
+		;
+	new = malloc(sizeof(char *) * (i + 1 + (val != NULL)));
+	for (i = 0; arr[i]; i++)
+		new[i] = _strdup(arr[i]);
+	if (val != NULL)
+		new[i++] = _strdup(val);
+	new[i] = NULL;
+	return (new);
 }
 
 /**
- * add_pair_node - Adds a new node with the specified key and value
- * to the end of the linked list.
- * @head: The head of the linked list.
- * @key: The key to be added.
- * @value: The value associated with the key.
- * @is_alias: Flag indicating whether it's an is_alias (1) or
- * environment variable (0).
- * Return: The updated head of the linked list.
+ * set_env - Add new `env_var` with `env_value` or update existing `env_var`
+ * variable adding `env_value` to it.
+ * @env: a 2d array of environment variables string.
+ * @args: 2d char - array of commands include
+ * ('setenv', 'env_var', 'env_value')
+ * @prog: program name, to display in errors.
+ * Return: new allocated copy of a 2d char array with env_var removed or same
+ * env it nothing need to change, in case of error NULL returned.
  */
-
-t_pair *add_pair_node(t_pair *head, char *key, char *value, int is_alias)
+char **set_env(char **env, char **args, char *prog)
 {
-	t_pair *new;
-	t_pair *current;
+	int i, l;
+	char *new, **new_env, *env_var, *env_value;
 
-	new = malloc(sizeof(t_pair));
+	if (args[1] == NULL || args[2] == NULL || args[3] != NULL)
+	{
+		write(STDERR_FILENO, prog, _strlen(prog));
+		write(STDERR_FILENO, ": setenv syntax error\n", 23);
+		return (NULL);
+	}
+	env_var = args[1];
+	env_value = args[2];
+	l = _strlen(env_var) + _strlen(env_value) + 2;
+	new = malloc(sizeof(char) * l);
 	if (new == NULL)
-	{
-		write(STDERR_FILENO, "Error: Memory allocation failed", 32);
 		return (NULL);
-	}
-
-	new->key = _strdup(key);
-	if (new->key == NULL)
-	{
-		write(STDERR_FILENO, "Error: Memory allocation failed", 32);
-		free(new);
-		return (NULL);
-	}
-
-	new->value = _strdup(value);
-	if (new->value == NULL)
-	{
-		write(STDERR_FILENO, "Error: Memory allocation failed", 32);
-		free(new->key);
-		free(new);
-		return (NULL);
-	}
-
-	new->is_alias = is_alias;
-	new->next = NULL;
-	if (head == NULL)
-		return (new);
-
-	current = head;
-	while (current->next != NULL)
-		current = current->next;
-
-	current->next = new;
-	return (head);
-}
-
-/**
- * remove_pair_node - Removes a pair node with the specified key from
- * the linked list.
- * @head: The head of the linked list.
- * @key: The key of the node to be removed.
- * @is_alias: Flag indicating whether it's an is_alias (1) or
- * environment variable (0).
- * Return: The updated head of the linked list.
- */
-
-t_pair *remove_pair_node(t_pair *head, char *key, int is_alias)
-{
-	t_pair *current = head;
-	t_pair *prev = NULL;
-
-	while (current != NULL)
-	{
-		if (_strcmp(current->key, key) == 0 && current->is_alias == is_alias)
+	for (i = 0; env_var[i]; i++)
+		new[i] = env_var[i];
+	new[i++] = '=';
+	new[i] = '\0';
+	_strcat(new, env_value);
+	for (i = 0; env[i]; i++)
+		if (_strncmp(env_var, env[i], _strlen(env_var)) == 0)
 		{
-			if (prev == NULL)
-				head = current->next;
-			else
-				prev->next = current->next;
-
-			free(current->key);
-			free(current->value);
-			free(current);
-			return (head);
+			env[i] = _strcat(_realloc(env[i], l), env_value);
+			return (env);
 		}
-
-		prev = current;
-		current = current->next;
-	}
-
-	return (head);
+	new_env = get_new_2d_arr(env, new);
+	free_2d_arr(env);
+	return (new_env);
 }
 
 /**
- * initialize_list - Initializes the linked list using the envp variable
- * passed through main args.
- * @envp: The environment variables passed to the program.
- * Return: The head of the initialized linked list.
+ * unset_env - remove `env_var` from environment variable from env array
+ * if it is exist.
+ * @env: a 2d array of environment variables string.
+ * @args: 2d char - array of commands include ('unsetenv', 'env_var')
+ * @prog: program name, to display in errors.
+ * Return: new allocated copy of a 2d char array with env_var removed or same
+ * env it nothing need to change, in case of error NULL returned.
  */
-
-t_pair *initialize_pair_list(char *envp[])
+char **unset_env(char **env, char **args, char *prog)
 {
-	t_pair *head = NULL;
-	int i = 0;
-	char *token;
+	int i, f = 0;
+	char **new, *env_var;
 
-	while (envp[i] != NULL)
+	if (args[1] == NULL || args[2] != NULL)
 	{
-		token = _strtok(envp[i], "=");
-		head = add_pair_node(head, token, _strtok(NULL, "="), 0);
-		i++;
+		write(STDERR_FILENO, prog, _strlen(prog));
+		write(STDERR_FILENO, ": unsetenv syntax error\n", 25);
+		return (NULL);
 	}
-
-	return (head);
+	env_var = args[1];
+	for (i = 0; env[i]; i++)
+		if (_strncmp(env_var, env[i], _strlen(env_var)) == 0)
+			f++;
+	if (f == 0)
+		return (env);
+	new = malloc(sizeof(char *) * i);
+	if (new == NULL)
+		return (NULL);
+	f = 0;
+	for (i = 0; env[i]; i++)
+		if (_strncmp(env_var, env[i], _strlen(env_var)) != 0)
+			new[f++] = env[i];
+	new[f] = NULL;
+	free(env);
+	return (new);
 }
 
 /**
- * free_pairs_list - Frees the memory occupied by the pairs linked list.
- * @head: The head of the pairs linked list.
+ * _env - print environment variables
+ * @env: a 2d array of environment variables string.
+ * Return: 0 on success otherwise an error.
  */
-
-void free_pairs_list(t_pair *head)
+int _env(char **env)
 {
-	t_pair *current = head;
-	t_pair *next;
+	int i;
 
-	while (current != NULL)
+	for (i = 0; env[i]; i++)
 	{
-		next = current->next;
-
-		free(current->key);
-		free(current->value);
-		free(current);
-
-		current = next;
+		if (_puts(env[i]) < 0)
+			return (-1);
+		if (write(STDOUT_FILENO, "\n", 1) < 0)
+			return (-1);
 	}
+	return (0);
 }
