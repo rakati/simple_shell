@@ -36,30 +36,32 @@ static int sys_execute(char **cmd, char **env, char *prog)
  * @status: status of last execution
  * Return: The exit status of the executed command or -1 on failure.
  */
-int _execute(t_cmd *cmd_l, char **env, char *prog, int status)
+int _execute(t_cmd *cmd_l, char ***env, char *prog, int status)
 {
 	int st = 0;
+	char **new_env;
 
 	while (cmd_l != NULL)
 	{
-		/* if (_strcmp(cmd_l->cmd[0], "alias") == 0) */
-		/* status = handle_alias(cmd_l->cmd); */
-		/* else if (_strcmp(cmd_l->cmd[0], "env") == 0) */
-		/* status = print_env(*env); */
-		/* else if (_strcmp(cmd_l->cmd[0], "setenv") == 0) */
-		/* status = _setenv(cmd_l->cmd, env); */
-		/* else if (_strcmp(cmd_l->cmd[0], "unsetenv") == 0) */
-		/* status = _unsetenv(cmd_l->cmd, env); */
-		/* else if (_strcmp(cmd_l->cmd[0], "cd") == 0) */
-		/* status = _cd(cmd_l->cmd, env); */
+		st = 0;
 		if (!cmd_l->cmd[0])
-			st = 0;
+			;
 		else if (_strcmp(cmd_l->cmd[0], "echo") == 0)
 			st = ft_echo(cmd_l->cmd, status);
 		else if (_strcmp(cmd_l->cmd[0], "exit") == 0)
-			st = ft_exit(cmd_l, status);
+			st = ft_exit(cmd_l, status, *env);
+		else if (_strcmp(cmd_l->cmd[0], "env") == 0)
+			st = _env(*env);
+		else if (_strcmp(cmd_l->cmd[0], "unsetenv") == 0)
+			new_env = unset_env(*env, cmd_l->cmd, prog);
+		else if (_strcmp(cmd_l->cmd[0], "setenv") == 0)
+			new_env = set_env(*env, cmd_l->cmd, prog);
 		else
-			st = sys_execute(cmd_l->cmd, env, prog);
+			st = sys_execute(cmd_l->cmd, *env, prog);
+		if (new_env == NULL)
+			st = -1;
+		else
+			*env = new_env;
 		if (st != 0 && cmd_l->type == AND)
 			break;
 		else if (st == 0 && cmd_l->type == OR)
