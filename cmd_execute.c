@@ -39,6 +39,7 @@ static int _is_cmd_exist(char **cmd, char **env, char *prog)
 		if (access(cmd_path, F_OK) == 0)
 		{
 			free(*cmd);
+			free(path);
 			*cmd = cmd_path;
 			return (0);
 		}
