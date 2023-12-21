@@ -44,6 +44,7 @@ int _execute(t_cmd *cmd_l, char ***env, char *prog, int status)
 	while (cmd_l != NULL)
 	{
 		st = 0;
+		new_env = *env;
 		if (!cmd_l->cmd[0])
 			;
 		else if (_strcmp(cmd_l->cmd[0], "echo") == 0)
