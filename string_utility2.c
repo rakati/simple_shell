@@ -54,6 +54,31 @@ char *_strndup(const char *str, size_t len)
 }
 
 /**
+ * _strncmp - compare n characters of two string
+ * @s1: input string
+ * @s2: input string
+ * @n: number of characters to compare
+ *
+ * Return: 0 if n char of string are identical, otherwise ascii difference.
+ */
+
+int _strncmp(char *s1, char *s2, size_t n)
+{
+	size_t i = 0;
+
+	while (s1[i] != '\0' && s2[i] != '\0' && i < n)
+	{
+		if (s1[i] != s2[i])
+		{
+			return (s1[i] - s2[i]);
+		}
+		i++;
+	}
+
+	return (s1[i] - s2[i]);
+}
+
+/**
  * _strcat - concatenates two strings
  * @dest: input value
  * @src: input value
