@@ -110,7 +110,7 @@ int _execute(t_cmd *cmd_l, char ***env, char *prog, int status)
 		else if (_strcmp(cmd_l->cmd[0], "echo") == 0)
 			st = ft_echo(cmd_l->cmd, status);
 		else if (_strcmp(cmd_l->cmd[0], "exit") == 0)
-			st = ft_exit(cmd_l, status, *env);
+			st = ft_exit(cmd_l, status, *env, prog);
 		else if (_strcmp(cmd_l->cmd[0], "env") == 0)
 			st = _env(*env);
 		else if (_strcmp(cmd_l->cmd[0], "unsetenv") == 0)

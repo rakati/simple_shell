@@ -31,10 +31,11 @@ int ft_echo(char **cmd, int st)
  * @cmd: data structure contain command and it's arguments
  * @st: status of last command
  * @env: environment variables array
+ * @prog: program name
  * Return: return error number only on error otherwise exit with status.
  */
 
-int ft_exit(t_cmd *cmd, int st, char **env)
+int ft_exit(t_cmd *cmd, int st, char **env, char *prog)
 {
 	int i;
 
@@ -45,8 +46,9 @@ int ft_exit(t_cmd *cmd, int st, char **env)
 		{
 			if (cmd->cmd[1][i] < '0' || cmd->cmd[1][i] > '9')
 			{
-				write(2, "exit: Illegal number: ", 23);
-				write(2, cmd->cmd[1], _strlen(cmd->cmd[1]));
+				write(STDERR_FILENO, prog, _strlen(prog));
+				write(STDERR_FILENO, ": 1: exit: Illegal number: ", 27);
+				write(STDERR_FILENO, cmd->cmd[1], _strlen(cmd->cmd[1]));
 				write(2, "\n", 1);
 				return (2);
 			}
