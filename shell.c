@@ -13,11 +13,11 @@ int main(int ac, char **av, char **envp)
 {
 	char *line = NULL;
 	t_cmd *info = NULL;
-	/* t_pair *env; */
+	char **env;
 	int fd, interactive, st = 0, cmd_st = 0;
 
 	fd = (ac != 1 ? open(av[1], O_RDONLY) : STDIN_FILENO);
-	/* env = initialize_pair_list(envp); */
+	env = get_new_2d_arr(envp, NULL);
 	interactive = isatty(STDIN_FILENO);
 	while (1)
 	{
@@ -39,8 +39,9 @@ int main(int ac, char **av, char **envp)
 		if (line != NULL)
 			free(line);
 		if (st == 0)
-			cmd_st = _execute(info, envp, av[0], cmd_st);
+			cmd_st = _execute(info, &env, av[0], cmd_st);
 		free_cmd_list(info);
 	}
+	free_2d_arr(env);
 	return (cmd_st);
 }

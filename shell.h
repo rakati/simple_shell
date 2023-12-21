@@ -20,6 +20,7 @@ int _strlen(const char *);
 int _puts(char *);
 int _getline(char **line, const int fd);
 int _strcmp(char *, char *);
+int _strncmp(char *s1, char *s2, size_t n);
 char *_strncpy(char *, const char *, size_t);
 char *_strdup(const char *);
 char *_strndup(const char *str, size_t len);
@@ -117,11 +118,15 @@ void free_list(t_list *head);
  * Implemented Builtin functions
  */
 int ft_echo(char **cmd, int st);
-int ft_exit(t_cmd *cmd, int st);
+int ft_exit(t_cmd *cmd, int st, char **env);
 
 /*
- * the linked list node and functions for environment variables.
+ * environment variables functions.
  */
+char **get_new_2d_arr(char **arr, char *val);
+char **set_env(char **env, char **args, char *prog);
+char **unset_env(char **env, char **args, char *prog);
+int _env(char **env);
 
 /**
  * struct s_pair - Represents a node in a linked list.
@@ -150,6 +155,6 @@ void free_pair_list(t_pair *head);
  * execute functions
  */
 
-int _execute(t_cmd *cmd_l, char **env, char *prog, int st);
+int _execute(t_cmd *cmd_l, char ***env, char *prog, int st);
 
 #endif

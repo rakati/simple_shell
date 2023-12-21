@@ -30,10 +30,11 @@ int ft_echo(char **cmd, int st)
  * ft_exit - free memory allocated and exit with status from the shell.
  * @cmd: data structure contain command and it's arguments
  * @st: status of last command
+ * @env: environment variables array
  * Return: return error number only on error otherwise exit with status.
  */
 
-int ft_exit(t_cmd *cmd, int st)
+int ft_exit(t_cmd *cmd, int st, char **env)
 {
 	int i;
 
@@ -53,6 +54,7 @@ int ft_exit(t_cmd *cmd, int st)
 		}
 	}
 	free_cmd_list(cmd);
+	free_2d_arr(env);
 	exit(st > 255 ? 2 : st);
 	return (0);
 }
