@@ -1,6 +1,56 @@
 #include "shell.h"
 
 /**
+ * _is_cmd_exist - Searches for a command in the PATH environment, if it is
+ * exist update the command with its full path.
+ * @cmd: address of pointer to command to look for.
+ * @env: An array of t_pair representing the environment variables.
+ * @prog: program name
+ * Return: 0 if found otherwise 2
+ */
+
+static int _is_cmd_exist(char **cmd, char **env, char *prog)
+{
+	char *path = NULL;
+	char *tok, *cmd_path;
+	int i, l;
+
+	if (access(*cmd, F_OK) == 0)
+		return (0);
+	for (i = 0; env[i]; i++)
+		if (_strncmp(env[i], "PATH", 4) == 0)
+		{
+			path = _strdup(env[i] + 5);
+			break;
+		}
+	tok = _strtok(path, ":");
+	while (tok != NULL)
+	{
+		l = _strlen(tok) + _strlen(*cmd) + 2;
+		cmd_path = malloc(l * sizeof(char));
+		if (cmd_path == NULL)
+		{
+			perror(prog);
+			break;
+		}
+		_strncpy(cmd_path, tok, l);
+		_strcat(cmd_path, "/");
+		_strcat(cmd_path, *cmd);
+		if (access(cmd_path, F_OK) == 0)
+		{
+			free(*cmd);
+			*cmd = cmd_path;
+			return (0);
+		}
+
+		free(cmd_path);
+		tok = _strtok(NULL, ":");
+	}
+	free(path);
+	return (2);
+}
+
+/**
  * sys_execute - Executes an external command using fork and execve
  * and waits for its completion.
  * @cmd: An array of strings representing the command and its arguments.
@@ -12,9 +62,15 @@
 static int sys_execute(char **cmd, char **env, char *prog)
 {
 	int st = 0;
+	pid_t pid;
 
-	pid_t pid = fork();
-
+	if (_is_cmd_exist(&cmd[0], env, prog) != 0)
+	{
+		write(STDERR_FILENO, prog, _strlen(prog));
+		write(STDERR_FILENO, ": Command not found\n", 21);
+		return (2);
+	}
+	pid = fork();
 	if (pid == -1)
 		return (-1);
 	else if (pid == 0)
