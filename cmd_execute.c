@@ -13,7 +13,7 @@ static int _is_cmd_exist(char **cmd, char **env, char *prog)
 {
 	char *path = NULL;
 	char *tok, *cmd_path;
-	int i, l;
+	int i, l, l2;
 
 	if (access(*cmd, F_OK) == 0)
 		return (0);
@@ -24,16 +24,17 @@ static int _is_cmd_exist(char **cmd, char **env, char *prog)
 			break;
 		}
 	tok = _strtok(path, ":");
+	l = _strlen(*cmd) + 2;
 	while (tok != NULL)
 	{
-		l = _strlen(tok) + _strlen(*cmd) + 2;
-		cmd_path = malloc(l * sizeof(char));
+		l2 = _strlen(tok);
+		cmd_path = malloc((l + l2) * sizeof(char));
 		if (cmd_path == NULL)
 		{
 			perror(prog);
 			break;
 		}
-		_strncpy(cmd_path, tok, l);
+		_strncpy(cmd_path, tok, l2 + 1);
 		_strcat(cmd_path, "/");
 		_strcat(cmd_path, *cmd);
 		if (access(cmd_path, F_OK) == 0)
@@ -68,8 +69,10 @@ static int sys_execute(char **cmd, char **env, char *prog)
 	if (_is_cmd_exist(&cmd[0], env, prog) != 0)
 	{
 		write(STDERR_FILENO, prog, _strlen(prog));
-		write(STDERR_FILENO, ": Command not found\n", 21);
-		return (2);
+		write(STDERR_FILENO, ": 1: ", 5);
+		write(STDERR_FILENO, cmd[0], _strlen(cmd[0]));
+		write(STDERR_FILENO, ": not found\n", 12);
+		return (127);
 	}
 	pid = fork();
 	if (pid == -1)
