@@ -86,7 +86,7 @@ static int sys_execute(char **cmd, char **env, char *prog)
 	else
 		waitpid(pid, &st, 0);
 	if (WIFEXITED(st))
-		return WEXITSTATUS(st);
+		return (WEXITSTATUS(st));
 	return (0);
 }
 
