@@ -16,6 +16,11 @@ int main(int ac, char **av, char **envp)
 	int fd, interactive, st = 0, cmd_st = 0;
 
 	fd = (ac != 1 ? open(av[1], O_RDONLY) : STDIN_FILENO);
+	if (fd == -1)
+	{
+		perror(av[0]);
+		exit(EXIT_FAILURE);
+	}
 	env = get_new_2d_arr(envp, NULL);
 	interactive = isatty(STDIN_FILENO);
 	while (1)
