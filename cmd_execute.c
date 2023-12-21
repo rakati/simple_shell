@@ -15,7 +15,7 @@ static int _is_cmd_exist(char **cmd, char **env, char *prog)
 	char *tok, *cmd_path;
 	int i, l, l2;
 
-	if (access(*cmd, F_OK) == 0)
+	if (access(*cmd, F_OK | X_OK) == 0)
 		return (0);
 	for (i = 0; env[i]; i++)
 		if (_strncmp(env[i], "PATH", 4) == 0)
@@ -37,7 +37,7 @@ static int _is_cmd_exist(char **cmd, char **env, char *prog)
 		_strncpy(cmd_path, tok, l2 + 1);
 		_strcat(cmd_path, "/");
 		_strcat(cmd_path, *cmd);
-		if (access(cmd_path, F_OK) == 0)
+		if (access(cmd_path, F_OK | X_OK) == 0)
 		{
 			free(*cmd);
 			free(path);
@@ -64,17 +64,8 @@ static int _is_cmd_exist(char **cmd, char **env, char *prog)
 static int sys_execute(char **cmd, char **env, char *prog)
 {
 	int st = 0;
-	pid_t pid;
+	pid_t pid = fork();
 
-	if (_is_cmd_exist(&cmd[0], env, prog) != 0)
-	{
-		write(STDERR_FILENO, prog, _strlen(prog));
-		write(STDERR_FILENO, ": 1: ", 5);
-		write(STDERR_FILENO, cmd[0], _strlen(cmd[0]));
-		write(STDERR_FILENO, ": not found\n", 12);
-		return (127);
-	}
-	pid = fork();
 	if (pid == -1)
 		return (-1);
 	else if (pid == 0)
@@ -85,7 +76,22 @@ static int sys_execute(char **cmd, char **env, char *prog)
 	}
 	else
 		waitpid(pid, &st, 0);
-	return (st);
+	if (WIFEXITED(st))
+		return WEXITSTATUS(st);
+	return (0);
+}
+
+static int cmd_pre_check(char **cmd, char **env, char *prog)
+{
+	if (_is_cmd_exist(&cmd[0], env, prog) != 0)
+	{
+		write(STDERR_FILENO, prog, _strlen(prog));
+		write(STDERR_FILENO, ": 1: ", 5);
+		write(STDERR_FILENO, cmd[0], _strlen(cmd[0]));
+		write(STDERR_FILENO, ": not found\n", 12);
+		return (127);
+	}
+	return (sys_execute(cmd, env, prog));
 }
 
 /**
@@ -118,7 +124,7 @@ int _execute(t_cmd *cmd_l, char ***env, char *prog, int status)
 		else if (_strcmp(cmd_l->cmd[0], "setenv") == 0)
 			new_env = set_env(*env, cmd_l->cmd, prog);
 		else
-			st = sys_execute(cmd_l->cmd, *env, prog);
+			st = cmd_pre_check(cmd_l->cmd, *env, prog);
 		if (new_env == NULL)
 			st = -1;
 		else
