@@ -60,7 +60,8 @@ char **set_env(char **env, char **args, char *prog)
 	for (i = 0; env[i]; i++)
 		if (_strncmp(env_var, env[i], _strlen(env_var)) == 0)
 		{
-			env[i] = _strcat(_realloc(env[i], l), env_value);
+			free(env[i]);
+			env[i] = new;
 			return (env);
 		}
 	new_env = get_new_2d_arr(env, new);

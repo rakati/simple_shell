@@ -11,9 +11,8 @@
  */
 int main(int ac, char **av, char **envp)
 {
-	char *line = NULL;
+	char *line = NULL, **env;
 	t_cmd *info = NULL;
-	char **env;
 	int fd, interactive, st = 0, cmd_st = 0;
 
 	fd = (ac != 1 ? open(av[1], O_RDONLY) : STDIN_FILENO);
