@@ -127,5 +127,5 @@ int _execute(t_cmd *cmd_l, char ***env, char *prog, int status)
 		cmd_l = cmd_l->next;
 		status = st;
 	}
-	return (st > 255 ? 2 : st);
+	return ((char)st);
 }

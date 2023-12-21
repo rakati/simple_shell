@@ -55,6 +55,6 @@ int ft_exit(t_cmd *cmd, int st, char **env)
 	}
 	free_cmd_list(cmd);
 	free_2d_arr(env);
-	exit(st > 255 ? 2 : st);
+	exit((char)st);
 	return (0);
 }
