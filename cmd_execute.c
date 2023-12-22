@@ -15,10 +15,10 @@ static int _is_cmd_exist(char **cmd, char **env, char *prog)
 	char *tok, *cmd_path;
 	int i, l, l2;
 
-	if (access(*cmd, F_OK | X_OK) == 0)
+	if (_strncmp(*cmd, "./", 2) == 0 && access(*cmd, F_OK | X_OK) == 0)
 		return (0);
 	for (i = 0; env[i]; i++)
-		if (_strncmp(env[i], "PATH", 4) == 0)
+		if (_strncmp(env[i], "PATH=", 5) == 0)
 		{
 			path = _strdup(env[i] + 5);
 			break;
