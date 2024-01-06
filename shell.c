@@ -18,7 +18,10 @@ int main(int ac, char **av, char **envp)
 	fd = (ac != 1 ? open(av[1], O_RDONLY) : STDIN_FILENO);
 	if (fd == -1)
 	{
-		perror(av[0]);
+		write(STDERR_FILENO, av[0], _strlen(av[0]));
+		write(STDERR_FILENO, ": 0: Can't open ", 16);
+		write(STDERR_FILENO, av[1], _strlen(av[1]));
+		write(STDERR_FILENO, "\n", 1);
 		exit(EXIT_FAILURE);
 	}
 	env = get_new_2d_arr(envp, NULL);
